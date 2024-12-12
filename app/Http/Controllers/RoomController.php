@@ -10,6 +10,8 @@ use App\Models\Sale;
 use App\Models\Installment;
 use App\Models\partner;
 use App\Models\RoomType;
+use App\Models\Parking;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -351,8 +353,10 @@ class RoomController extends Controller
             'custom_type' => 'nullable|string',
             'custom_area' => 'nullable|numeric',
             'custom_rate' => 'nullable|numeric',
-            
-            
+            'parking_floor' => 'nullable|string',
+            'parking_slot' => 'nullable|string',
+            'add_parking_amount' => 'nullable|boolean',
+            'parking_amount' => 'nullable|numeric',
         ]);
 
 
@@ -413,15 +417,16 @@ class RoomController extends Controller
         $room-> space_expected_price = $space_expected_price;
         $room-> kiosk_expected_price = $kiosk_expected_price;
         $room-> chair_space_expected_rate = $chair_space_expected_rate;
+      
 
         if (!in_array($validatedData['room_type'], ['Flat', 'Shops', 'Table space', 'Kiosk', 'Chair space'])) {
-            $room->custom_name = $validatedData['custom_name'];
-            $room->custom_type = $validatedData['custom_type'];
-            $room->custom_area = $validatedData['custom_area'];
-            $room->custom_rate = $validatedData['custom_rate'];
-            $room->expected_custom_rate = $expected_custom_rate;
-
+            $room->custom_name = $validatedData['custom_name'] ?? null;
+            $room->custom_type = $validatedData['custom_type'] ?? null;
+            $room->custom_area = $validatedData['custom_area'] ?? null;
+            $room->custom_rate = $validatedData['custom_rate'] ?? null;
+            $room->expected_custom_rate = $expected_custom_rate ?? null;
         }
+        
 
         $room->save();
 
@@ -438,7 +443,8 @@ class RoomController extends Controller
                 return redirect()->route('admin.chair-spaces.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
             default:
                 return redirect()->route('admin.rooms.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
-        }    }
+        }    
+    }
     
     public function destroy($building_id, $room_id)
     {
@@ -580,6 +586,13 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
         $building = Building::findOrFail($buildingId);
         $partners = Partner::all();
+        $availableFloors = Parking::where('status', 'available')
+        ->distinct()
+        ->pluck('floor_number');
+
+        // Fetch all available parking slots
+         $availableParkings = Parking::where('status', 'available')
+        ->get(['id', 'slot_number', 'amount', 'floor_number']);
 
         return view('rooms.sell', [
             'room' => $room,
@@ -587,6 +600,8 @@ class RoomController extends Controller
             'title' => 'Sell Room',
             'building' => $building,
             'partners' => $partners, // Remove quotes around $partners
+            'availableFloors' => $availableFloors,
+            'availableParkings' => $availableParkings,
         ]);
     }
 
@@ -860,10 +875,11 @@ class RoomController extends Controller
             ->get();
     
         $page = 'custom-rooms'; // Or any other appropriate value
-    
-        return view('rooms.custom_rooms', compact('rooms', 'building_id', 'page', 'building'));
-    }
+        $installments = Installment::all();
 
+    
+        return view('rooms.custom_rooms', compact('installments','rooms', 'building_id', 'page', 'building'));
+    }
         
     public function otherRoomTypesDifference($buildingId)
     {

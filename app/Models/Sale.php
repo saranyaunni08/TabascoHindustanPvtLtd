@@ -24,6 +24,8 @@ class Sale extends Model
         'total_amount',
         'discount_percentage',
         'discount_amount',
+        'cash_exchange_amount',
+        'cheque_exchange_amount',
         'final_amount',
         'cash_value_percentage',
         'cash_value_amount',

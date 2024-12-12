@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\ExchangeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BuildingController;
@@ -16,6 +18,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\StatementController;
+use App\Http\Controllers\TotalBuildUpAreaController;
+
 
 
 
@@ -41,8 +45,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/forgot_password', 'sendResetLinkEmail')->name('forgot_password');
 });
 
-    Route::middleware('auth:admin')->prefix('admin')->group(function () {
-        Route::name('admin.')->group(function () {
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
+    Route::name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/buildings', [BuildingController::class, 'index'])->name('building');
         Route::get('/add-building', [BuildingController::class, 'create'])->name('addbuilding');
@@ -71,9 +75,9 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('admin/rooms', [RoomController::class, 'store'])->name('rooms.store');
 
         Route::get('rooms', [RoomController::class, 'index'])->name('rooms.index');
-      
+
         Route::put('rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
-        
+
         Route::get('/shops/{id}/edit', [RoomController::class, 'edit'])->name('shops.edit');
 
         Route::put('/shops/{id}', [RoomController::class, 'update'])->name('shops.update');
@@ -110,11 +114,11 @@ Route::controller(AuthController::class)->group(function () {
 
         Route::post('/installments/{sale}/mark-paid', [SaleController::class, 'markInstallmentPaid'])->name('installments.markPaid');
 
-        
-        
+
+
         Route::get('/rooms/difference/{building_id}', [RoomController::class, 'difference'])
-        ->name('flats.difference');
-        
+            ->name('flats.difference');
+
         Route::get('/rooms/difference/shops/{building_id}', [RoomController::class, 'shopsDifference'])->name('shops.difference');
 
 
@@ -126,7 +130,7 @@ Route::controller(AuthController::class)->group(function () {
         Route::put('/installments/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
 
         Route::put('/installments/{id}/markAsPaid', [SaleController::class, 'markAsPaid'])
-        ->name('installments.markAsPaid');
+            ->name('installments.markAsPaid');
         Route::put('/customers/{customer}/installments/{installment}/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
         Route::put('/installments/markMultipleAsPaid', [SaleController::class, 'markMultipleAsPaid'])->name('installments.markMultipleAsPaid');
 
@@ -141,7 +145,7 @@ Route::controller(AuthController::class)->group(function () {
         Route::get('/test-pdf', function () {
             return view('test_pdf');
         });
-        
+
         Route::post('/sales/cancel', [SaleController::class, 'cancelSale'])->name('sales.cancel');
         Route::get('/sales/cancelled', [SaleController::class, 'listCancelledSales'])->name('sales.cancelled');
         Route::get('/sales/cancelled/{id}', [SaleController::class, 'viewCancelledSaleDetails'])->name('sales.cancelled_details');
@@ -151,20 +155,20 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('/edit-delete-logout', [EditDeleteAuthController::class, 'logout'])->name('edit_delete_auth.logout');
 
         Route::post('/auth', [EditDeleteAuthController::class, 'authenticate'])->name('auth');
-        
+
         Route::get('/rooms/{roomId}/{buildingId}/edit', [EditDeleteAuthController::class, 'showEditPage'])->name('rooms.edit');
         Route::post('/rooms/{roomId}/{buildingId}/edit', [EditDeleteAuthController::class, 'authenticate'])->name('rooms.authenticate');
 
         Route::post('/edit-delete-logout', [EditDeleteAuthController::class, 'logout'])->name('edit_delete_auth.logout');
 
-      
+
         Route::delete('/rooms/{roomId}/{buildingId}', [EditDeleteAuthController::class, 'deleteRoom'])->name('rooms.destroy');
         Route::delete('/rooms/destroy/{roomId}/{buildingId}', [EditDeleteAuthController::class, 'destroyFlat'])->name('rooms.destroy.flat');
         Route::delete('/rooms/{roomId}/{buildingId}/deleteShops', [EditDeleteAuthController::class, 'deleteShops'])->name('rooms.deleteShops');
         Route::delete('/rooms/{roomId}/{buildingId}/deleteKiosk', [EditDeleteAuthController::class, 'deleteKiosk'])->name('rooms.destroy.Kiosk');
         Route::delete('/rooms/{roomId}/{buildingId}/deleteTableSpace', [EditDeleteAuthController::class, 'deleteTableSpace'])->name('rooms.destroy.deleteTableSpace');
         Route::delete('/rooms/{roomId}/{buildingId}/deleteChairSpace', [EditDeleteAuthController::class, 'deleteChairSpace'])->name('rooms.destroy.chairspace');
-       
+
         Route::get('/kiosk/difference/{buildingId}', [RoomController::class, 'kioskDifference'])->name('kiosk.difference');
         Route::get('/chair-spaces/difference/{building_id}', [RoomController::class, 'showChairSpaceDifference'])->name('chair_spaces.difference');
         Route::get('/table-space/difference/{building_id}', [RoomController::class, 'showTableSpaceDifference'])->name('table_spaces.difference');
@@ -182,7 +186,7 @@ Route::controller(AuthController::class)->group(function () {
         Route::put('/partners/{partner}/mark-paid', [PartnerController::class, 'markAsPaid'])->name('partners.mark_paid');
 
 
-            // Route to display the form for adding a new room type
+        // Route to display the form for adding a new room type
         Route::get('/room-types/create', [RoomTypeController::class, 'create'])->name('room_types.create');
 
         // Route to store the new room type
@@ -199,7 +203,7 @@ Route::controller(AuthController::class)->group(function () {
 
 
 
-        
+
         Route::get('/statement-cash/{sale}', [StatementController::class, 'cash'])->name('statement-cash');
         Route::get('/statement-cheque/{sale}', [StatementController::class, 'cheque'])->name('statement-cheque');
         Route::get('/statement-all/{sale}', [StatementController::class, 'all'])->name('statement-all');
@@ -207,17 +211,17 @@ Route::controller(AuthController::class)->group(function () {
 
 
         Route::get('/cash-statement/{sale}/download', [StatementController::class, 'downloadCashStatement'])
-        ->name('cash-statement.download');
+            ->name('cash-statement.download');
 
         Route::get('/cheque-statement/download/{id}', [StatementController::class, 'downloadChequeStatement'])->name('cheque-statement.download');
 
         Route::get('/buildings/{buildingId}/customers', [SaleController::class, 'index'])
-        ->name('building.customers');
+            ->name('building.customers');
 
         Route::get('/statements/commercial-sales-report', [StatementController::class, 'commercialSalesReport'])->name('statements.commercial-sales-report');
-       //shops
+        //shops
         Route::get('/admin/statements/shop-sales-report', [StatementController::class, 'shopSalesReport'])->name('statements.shop-sales-report');
-       //Flats
+        //Flats
         Route::get('/admin/statements/apartments-sales-report', [StatementController::class, 'apartmentSalesReport'])->name('statements.apartments-sales-report');
 
         // Route::get('/commercial-sales-summary', [StatementController::class, 'commercialSalesSummary'])->name('statements.commercialsummary');
@@ -227,10 +231,33 @@ Route::controller(AuthController::class)->group(function () {
         Route::get('/buildings/{building_id}/available-rooms', [StatementController::class, 'showAvailableRooms'])->name('rooms.available');
         Route::get('/buildings/{building}/available-shops', [StatementController::class, 'availableShops'])->name('available.shops');
         Route::get('/buildings/{building}/available-flats', [StatementController::class, 'showAvailableFlats'])->name('available.flats');
-    
+
         Route::resource('parking', ParkingController::class);
 
 
+    Route::get('/total-build-up-area-detail/total_breakup/{building_id}', [TotalBuildUpAreaController::class, 'totalbuildup'])
+    ->name('totalbuildupexcel.total_breakup');
 
-        });
+        Route::get('/totalbuildupexcel.apartment_breakup/{building_id}', [TotalBuildUpAreaController::class, 'index'])->name('totalbuildupexcel.apartment_breakup');
+        Route::get('/totalbuildupexcel.commercial_breakup/{building_id}',[TotalBuildUpAreaController::class,'commercialbreakup'])->name('totalbuildupexcel.commercial_breakup');
+        Route::get('/totalbuildupexcel.parking_breakup/{building_id}',[TotalBuildUpAreaController::class,'parkingbreakup'])->name('totalbuildupexcel.parking_breakup');
+        Route::get('/totalbuildupexcel.summary/{building_id}',[TotalBuildUpAreaController::class,'summary'])->name('totalbuildupexcel.summary');
+        Route::get('/totalbuildupexcel.balance_summary/{building_id}',[TotalBuildUpAreaController::class,'balancesummary'])->name('totalbuildupexcel.balance_summary');
+        Route::get('/totalbuildupexcel.changes_in_expected_amount/{building_id}',[TotalBuildUpAreaController::class,'changesinExpectedamount'])->name('totalbuildupexcel.changes_in_expected_amount');
+
+
+        Route::get('/availability-report/totalavailability/{building_id}', [AvailabilityController::class, 'totalavailability'])->name('availability.totalavailability');
+        Route::get('/availability.availabilityshop/{building_id}',[AvailabilityController::class,'availabilityshop'])->name('availability.availabilityshop');
+        Route::get('/availability.availabilityflat/{building_id}',[AvailabilityController::class,'availabilityflat'])->name('availability.availabilityflat');
+        Route::get('/availability.availabilityparking/{building_id}',[AvailabilityController::class,'availabilityparking'])->name('availability.availabilityparking');
+        Route::get('/availability.summary/{building_id}',[AvailabilityController::class,'summary'])->name('availability.summary');
+
+
+
+
+
+
+
+
+    });
 });

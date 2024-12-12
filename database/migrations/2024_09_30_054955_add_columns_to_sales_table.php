@@ -24,7 +24,6 @@ class AddColumnsToSalesTable extends Migration
             $table->decimal('total_cash_value', 10, 2)->nullable();
             $table->decimal('total_received_amount', 10, 2)->nullable();
             $table->text('partners')->nullable();
-            $table->text('partner_distribution')->nullable();
             $table->text('other_expenses')->nullable();
             $table->decimal('remaining_cash_value', 10, 2)->nullable();
             $table->string('loan_type')->nullable();
@@ -61,7 +60,6 @@ class AddColumnsToSalesTable extends Migration
                 'total_cash_value',
                 'total_received_amount',
                 'partners',
-                'partner_distribution',
                 'other_expenses',
                 'remaining_cash_value',
                 'loan_type',

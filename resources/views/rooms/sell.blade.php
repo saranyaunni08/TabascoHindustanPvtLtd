@@ -43,7 +43,7 @@
         </div>
 
         <!-- Read-only Fields for Super Build-Up and Carpet Area -->
-        @if($room->room_type == 'Flat')
+        @if($room->room_type == 'Flats')
             <div class="form-group">
                 <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
                 <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->flat_build_up_area }}" readonly>
@@ -63,14 +63,14 @@
                 <input type="text" class="form-control" id="carpet_area" name="carpet_area" value="{{ $room->carpet_area }}" readonly>
             </div>
         @endif
-        @if($room->room_type == 'Table space')
+        @if($room->room_type == 'Tablespaces')
             <div class="form-group">
                 <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
                 <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->space_area }}" readonly>
             </div>
             
         @endif
-        @if($room->room_type == 'Chair space')
+        @if($room->room_type == 'Chairspaces')
             <div class="form-group">
                 <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
                 <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->chair_space_in_sq}}" readonly>
@@ -191,7 +191,7 @@
 
      <!-- Cash Installment Value -->
         <div class="form-group">
-            <label for="cash_installment_value">Cash Installment Value</label>
+            <label for="cash_installment_value">Cash Installment Value for Installment</label>
             <input type="number" class="form-control" id="cash_installment_value" name="cash_installment_value" min="0" step="0.01" oninput="toggleCashInstallmentFields()">
         </div>
 
@@ -292,20 +292,20 @@
         <input type="hidden" name="total_cheque_value" id="total_cheque_value_hidden"> <!-- Hidden field for form submission -->
     </div>
     
-    {{-- 2 nd  --}}
+    
 
     <div id="additional-expenses-container">
-        <h5>Additional Amounts</h5>
+        <h5>Other Expenses</h5>
         <div class="row mb-2" id="expense-container">
             <div class="col-md-6">
-                <input type="text" placeholder=" Description" class="form-control cheque-expense-description" name="cheque_expense_descriptions[]" />
+                <input type="text" placeholder="Expense Description" class="form-control cheque-expense-description" name="cheque_expense_descriptions[]" />
             </div>
             <div class="col-md-6">
-                <input type="number" placeholder=" Amount" class="form-control cheque-expense-amount" name="cheque_expense_amounts[]" oninput="calculateTotalChequeValueWithAdditional()" />
+                <input type="number" placeholder="Expense Amount" class="form-control cheque-expense-amount" name="cheque_expense_amounts[]" oninput="calculateTotalChequeValueWithAdditional()" />
             </div>
         </div>
         <br>
-        <button id="add-expense" class="btn btn-success mt-2">+ Add More</button>
+        <button id="add-expense" class="btn btn-success mt-2">Add Expense</button>
     </div>
     
     
@@ -904,10 +904,10 @@ document.getElementById('add-expense').addEventListener('click', function() {
     newExpenseEntry.classList.add('row', 'mb-2');
     newExpenseEntry.innerHTML = `
         <div class="col-md-6">
-            <input type="text" placeholder=" Description" class="form-control cheque-expense-description" name="cheque_expense_descriptions[]" />
+            <input type="text" placeholder="Expense Description" class="form-control cheque-expense-description" name="cheque_expense_descriptions[]" />
         </div>
         <div class="col-md-6">
-            <input type="number" placeholder=" Amount" class="form-control cheque-expense-amount" name="cheque_expense_amounts[]" oninput="calculateTotalChequeValueWithAdditional()" />
+            <input type="number" placeholder="Expense Amount" class="form-control cheque-expense-amount" name="cheque_expense_amounts[]" oninput="calculateTotalChequeValueWithAdditional()" />
         </div>
         <div class="col-md-2">
             <button type="button" class="btn btn-danger remove-expense">Remove</button>

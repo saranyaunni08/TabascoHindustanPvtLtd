@@ -7,11 +7,13 @@
     </div>
      <!-- Links to Statement Pages -->
      <div class="d-flex justify-content-center mb-4 gap-3">
-        <a href="{{ route('admin.statement-cash', $sale->id) }}" class="btn btn-outline-primary">Cash Statement</a>
-        <a href="{{ route('admin.statement-cheque', $sale->id) }}" class="btn btn-outline-secondary">Cheque Statement</a>
-        <a href="{{ route('admin.statement-all', $sale->id) }}" class="btn btn-outline-success">All Statements</a>
-        <a href="{{ route('admin.statement-summary', $sale->id) }}" class="btn btn-outline-info">Summary Statement</a>
-    </div>
+    <a href="{{ route('admin.statement-cash', $sale->id) }}" class="btn btn-outline-primary">Cash Statement</a>
+    <a href="{{ route('admin.statement-cheque', $sale->id) }}" class="btn btn-outline-secondary">Cheque Statement</a>
+    <a href="{{ route('admin.statement-all', $sale->id) }}" class="btn btn-outline-success">All Statements</a>
+    <a href="{{ route('admin.statement-summary', $sale->id) }}" class="btn btn-outline-info">Summary Statement</a>
+  
+</div>
+
 
     <table class="table table-bordered shadow-lg">
         <thead class="bg-dark text-white text-center">

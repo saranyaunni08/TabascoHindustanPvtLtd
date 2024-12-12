@@ -228,6 +228,8 @@
 
 
 
+
+
 <li class="nav-item">
   <a class="nav-link text-white" href="{{ route('admin.building.customers', ['buildingId' => $building->id]) }}">
     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -260,6 +262,19 @@
         <span class="nav-link-text">Cancelled Sales</span>
     </a>
 </li>
+<li class="nav-item {{ $page == 'total-build-up-area-detail' ? 'active bg-gradient-info' : '' }}">
+<a class="nav-link" href="{{ route('admin.totalbuildupexcel.total_breakup', ['building_id' => $building->id]) }}">
+      <i class="material-icons opacity-10">apartment</i> <!-- Icon for total build-up area detail -->
+      <span class="nav-link-text ms-1">Total Build-Up Area Detail</span>
+  </a>
+</li>
+<li class="nav-item {{ $page == 'availability-report' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.availability.totalavailability', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">report</i> <!-- Icon for availability report -->
+    <span class="nav-link-text ms-1">Availability Report</span>
+  </a>
+</li>
+
 
         @endif 
 
