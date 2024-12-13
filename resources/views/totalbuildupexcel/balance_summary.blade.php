@@ -68,20 +68,15 @@
                     </tr>
                     <tr class="fw-bold">
                         <td>TOTAL</td>
-                        <td>1,57,904</td>
-                        <td>1,12,722</td>
-                        <td>₹77,42,60,750</td>
-                        <td>45,182</td>
-                        <td>₹53,46,84,350</td>
+                        <td>{{ number_format($Totaltotalsqft) }}</td>
+                        <td>{{ number_format( $Totalsalessqft ) }}</td>
+                        <td>₹{{ number_format($Totalsaleamount, 2) }}</td>
+                        <td>{{ number_format(  $TotalBalancesqft ) }}</td>
+                        <td>₹{{ number_format($TotalExpectedBalanceAmount , 2) }}</td>
                     </tr>
                 </tbody>
             </table>
-            <div class="mt-3 text-danger">
-                <p><strong>Note:</strong> Expected Balance Amount should be the value of balance square feet to sell.
-                </p>
-                <p><strong>Note:</strong> Expected amount should be taken from the total. Type should be able to add
-                    more.</p>
-            </div>
+          
         </div>
     </div>
 

@@ -39,7 +39,7 @@
                                 <tr>
                                     <td>{{ $room->room_floor }}</td>
                                     <td>{{ $room->custom_name }}</td>
-                                    <td>{{ $room->custom_type }}</td>
+                                    <td>{{ $room->room_type }}</td>
                                     <td>{{ $room->custom_area }} sq ft</td>
                                     <td>₹{{ number_format($room->custom_rate, 2) }}</td>
                                     <td>₹{{ number_format($room->expected_custom_rate, 2) }}</td>

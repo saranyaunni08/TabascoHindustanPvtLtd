@@ -19,6 +19,7 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\StatementController;
 use App\Http\Controllers\TotalBuildUpAreaController;
+use App\Http\Controllers\SalesReportController;
 
 
 
@@ -251,6 +252,8 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
         Route::get('/availability.availabilityflat/{building_id}',[AvailabilityController::class,'availabilityflat'])->name('availability.availabilityflat');
         Route::get('/availability.availabilityparking/{building_id}',[AvailabilityController::class,'availabilityparking'])->name('availability.availabilityparking');
         Route::get('/availability.summary/{building_id}',[AvailabilityController::class,'summary'])->name('availability.summary');
+
+        Route::get('/sales-report/all/{building_id}',[SalesReportController::class,'allsales'])->name('sales.all');
 
 
 

@@ -419,9 +419,23 @@ class TotalBuildUpAreaController extends Controller
 
         // Get the total count of parking entries
         $parkingno = $parkings->count();
-         // Calculate the total sale amount for parking
-    $parkingSaleAmount = $parkings->sum('sale_amount');
+        // Calculate the total sale amount for parking
+        $parkingSaleAmount = $parkings->sum('sale_amount');
 
+        //calculate the total total sqft
+        $Totaltotalsqft =  $totalSqFt + $totalSqFtcommercial + $parkingno;
+        
+        //calculate the total sales sqft
+        $Totalsalessqft = $salesSqFt + $salesSqFtcommercial;
+
+        //calculate the total sale amount
+        $Totalsaleamount = $saleAmount + $saleAmountcommercial + $parkingSaleAmount;
+
+        //calculate total balance sqft
+        $TotalBalancesqft = $balanceSqFt +  $balanceSqFtcommercial;
+
+       //calculate total expected balance amount
+       $TotalExpectedBalanceAmount =  $expectedBalanceAmount + $expectedBalanceAmountcommercial;
 
 
         // Pass the data to the view
@@ -446,8 +460,13 @@ class TotalBuildUpAreaController extends Controller
             'balanceSqFtcommercial',
             'parkings',
             'parkingno',
-             'parkingSaleAmount',
-             
+            'parkingSaleAmount',
+            'Totaltotalsqft',
+            'Totalsalessqft',
+            'Totalsaleamount',
+            'TotalExpectedBalanceAmount',
+            'TotalBalancesqft',
+
         ));
     }
 

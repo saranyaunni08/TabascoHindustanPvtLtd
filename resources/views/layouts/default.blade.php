@@ -274,6 +274,13 @@
     <span class="nav-link-text ms-1">Availability Report</span>
   </a>
 </li>
+<li class="nav-item {{ $page == 'sales-report' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.sales.all', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">bar_chart</i> <!-- Icon for sales report -->
+    <span class="nav-link-text ms-1">Sales Report</span>
+  </a>
+</li>
+
 
 
         @endif 
