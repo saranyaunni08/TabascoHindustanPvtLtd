@@ -46,7 +46,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-md-6 mb-4" id="flatFields" style="display: {{ $room_type == 'Flats' ? 'block' : 'none' }};">
+                                        <div class="col-md-6 mb-4" id="flatFields" style="display: {{ $room_type == 'Flat' ? 'block' : 'none' }};">
                                             <label for="flat_model" class="form-label">Flat Model</label>
                                             <input type="text" name="flat_model" class="form-control" style="text-transform: uppercase;">
                                             <label for="flat_build_up_area" class="form-label mt-3">Super Build-Up Area (sq ft)</label>
@@ -84,7 +84,7 @@
                                             
 
                                     <!-- Table Space Fields -->
-                                    <div class="col-md-6 mb-4" id="tableSpaceFields" style="display: {{ $room_type == 'Tablespaces' ? 'block' : 'none' }};">
+                                    <div class="col-md-6 mb-4" id="tableSpaceFields" style="display: {{ $room_type == 'Table space' ? 'block' : 'none' }};">
                                         <label for="space_name" class="form-label">Space Name</label>
                                         <input type="text" name="space_name" class="form-control" style="text-transform: uppercase;">
                                         
@@ -104,7 +104,7 @@
                                     </div>
                                     
                                         <!-- Kiosk Fields -->
-                                        <div class="col-md-6 mb-4" id="kioskFields" style="display: {{ $room_type == 'Kiosks' ? 'block' : 'none' }};">
+                                        <div class="col-md-6 mb-4" id="kioskFields" style="display: {{ $room_type == 'Kiosk' ? 'block' : 'none' }};">
                                             <label for="kiosk_name" class="form-label">Kiosk Name</label>
                                             <input type="text" name="kiosk_name" class="form-control" style="text-transform: uppercase;">
                                         
@@ -141,7 +141,7 @@
                                         </div>
 
 
-                                        <div class="col-md-6 mb-4" id="customFields" style="display: {{ !in_array($room_type, ['Flats', 'Shops', 'Tablespaces', 'Kiosks', 'Chairspaces']) ? 'block' : 'none' }};">
+                                        <div class="col-md-6 mb-4" id="customFields" style="display: {{ !in_array($room_type, ['Flat', 'Shops', 'Table space', 'Kiosk', 'Chair space']) ? 'block' : 'none' }};">
                                             <label for="custom_name" class="form-label"> Room Type Name</label>
                                             <input type="text" name="custom_name" class="form-control" style="text-transform: uppercase;">
                                         

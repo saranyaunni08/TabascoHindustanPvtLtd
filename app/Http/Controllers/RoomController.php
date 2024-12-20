@@ -269,10 +269,10 @@ class RoomController extends Controller
     {
         $building_id = $request->building_id;
         $room_type = $request->room_type;
+        $roomTypes = RoomType::pluck('name')->toArray();
         $building = Building::findOrFail($building_id);
 
         // Fetch room types from the database
-        $roomTypes =  RoomType::pluck('name')->toArray(); 
 
         // Sum the relevant fields from the rooms table for the specified building
         $roomSums = Room::where('building_id', $building_id)
@@ -307,6 +307,9 @@ class RoomController extends Controller
     }
     public function store(Request $request)
     {
+
+
+        // Validate the incoming data
         $validatedData = $request->validate([
             'room_number' => 'required|string',
             'room_floor' => 'nullable|string',
@@ -345,7 +348,7 @@ class RoomController extends Controller
             'chair_price' => 'nullable|numeric',
             'building_id' => 'required|exists:buildings,id',
             'flat_model' => 'nullable|string',
-            'sale_amount' => 'nullable|string',
+            'sale_amount' => 'nullable|numeric',
             'chair_space_in_sq' => 'nullable|string',
             'chair_space_rate' => 'nullable|string',
             'chair_space_expected_rate' => 'nullable|string',
@@ -354,96 +357,90 @@ class RoomController extends Controller
             'custom_area' => 'nullable|numeric',
             'custom_rate' => 'nullable|numeric',
             'parking_floor' => 'nullable|string',
-            'parking_slot' => 'nullable|string',
-            'add_parking_amount' => 'nullable|boolean',
-            'parking_amount' => 'nullable|numeric',
+            'parking_slot_id' => 'nullable|exists:parkings,id',
+            'parking_amount' => 'nullable|numeric', // New field
+            'parking_amount_cheque' => 'nullable|numeric',
+
         ]);
+        // dd($request->all());
 
-
+        // Calculate expected rates
         $expected_custom_rate = isset($validatedData['custom_area']) && isset($validatedData['custom_rate'])
-        ? $validatedData['custom_area'] * $validatedData['custom_rate']
-        : null;
-
-
-        if ($validatedData['carpet_area'] && $validatedData['carpet_area_price']) {
-            $expected_carpet_area_price = $validatedData['carpet_area_price'] * $validatedData['carpet_area'];
-        } else {
-            $expected_carpet_area_price = null;
-        }
-
-        if ($validatedData['build_up_area'] && $validatedData['super_build_up_price']) {
-            $expected_super_buildup_area_price = $validatedData['build_up_area'] * $validatedData['super_build_up_price'];
-        } else {
-            $expected_super_buildup_area_price = null;
-        }
-
-        if ($validatedData['flat_carpet_area'] && $validatedData['flat_carpet_area_price']) {
-            $flat_expected_carpet_area_price = $validatedData['flat_carpet_area'] * $validatedData['flat_carpet_area_price'];
-        }else {
-            $flat_expected_carpet_area_price = null;
-        }
-
-        if ($validatedData['flat_build_up_area'] && $validatedData['flat_super_build_up_price']) {
-            $flat_expected_super_buildup_area_price = $validatedData['flat_build_up_area'] * $validatedData['flat_super_build_up_price'];
-        }else {
-            $flat_expected_super_buildup_area_price = null;
-        }
-
-        if ($validatedData['space_area'] && $validatedData['space_rate']) {
-            $space_expected_price = $validatedData['space_area'] * $validatedData['space_rate'];
-        } else {
-            $space_expected_price =null;
-        }
-
-        if ($validatedData ['kiosk_area'] && $validatedData ['kiosk_rate']) {
-            $kiosk_expected_price = $validatedData ['kiosk_area'] * $validatedData ['kiosk_rate'];
-        } else {
-            $kiosk_expected_price = null;
-        }
-
-        if ($validatedData['chair_space_in_sq'] && isset($validatedData['chair_space_rate'])) {
-            $chair_space_expected_rate = $validatedData['chair_space_in_sq'] * $validatedData['chair_space_rate'];
-        } else {
-            $chair_space_expected_rate = null;
-        }
-        
+            ? $validatedData['custom_area'] * $validatedData['custom_rate']
+            : null;
+    
+        $expected_carpet_area_price = isset($validatedData['carpet_area'], $validatedData['carpet_area_price'])
+            ? $validatedData['carpet_area_price'] * $validatedData['carpet_area']
+            : null;
+    
+        $expected_super_buildup_area_price = isset($validatedData['build_up_area'], $validatedData['super_build_up_price'])
+            ? $validatedData['build_up_area'] * $validatedData['super_build_up_price']
+            : null;
+    
+        $flat_expected_carpet_area_price = isset($validatedData['flat_carpet_area'], $validatedData['flat_carpet_area_price'])
+            ? $validatedData['flat_carpet_area_price'] * $validatedData['flat_carpet_area']
+            : null;
+    
+        $flat_expected_super_buildup_area_price = isset($validatedData['flat_build_up_area'], $validatedData['flat_super_build_up_price'])
+            ? $validatedData['flat_build_up_area'] * $validatedData['flat_super_build_up_price']
+            : null;
+    
+        $space_expected_price = isset($validatedData['space_area'], $validatedData['space_rate'])
+            ? $validatedData['space_area'] * $validatedData['space_rate']
+            : null;
+    
+        $kiosk_expected_price = isset($validatedData['kiosk_area'], $validatedData['kiosk_rate'])
+            ? $validatedData['kiosk_area'] * $validatedData['kiosk_rate']
+            : null;
+    
+        $chair_space_expected_rate = isset($validatedData['chair_space_in_sq'], $validatedData['chair_space_rate'])
+            ? $validatedData['chair_space_in_sq'] * $validatedData['chair_space_rate']
+            : null;
+    
+        // Save room data
         $room = new Room();
         $room->fill($validatedData);
-
         $room->expected_carpet_area_price = $expected_carpet_area_price;
         $room->expected_super_buildup_area_price = $expected_super_buildup_area_price;
-        $room-> flat_expected_carpet_area_price = $flat_expected_carpet_area_price;
-        $room-> flat_expected_super_buildup_area_price = $flat_expected_super_buildup_area_price;
-        $room-> space_expected_price = $space_expected_price;
-        $room-> kiosk_expected_price = $kiosk_expected_price;
-        $room-> chair_space_expected_rate = $chair_space_expected_rate;
-      
-
+        $room->flat_expected_carpet_area_price = $flat_expected_carpet_area_price;
+        $room->flat_expected_super_buildup_area_price = $flat_expected_super_buildup_area_price;
+        $room->space_expected_price = $space_expected_price;
+        $room->kiosk_expected_price = $kiosk_expected_price;
+        $room->chair_space_expected_rate = $chair_space_expected_rate;
+    
         if (!in_array($validatedData['room_type'], ['Flat', 'Shops', 'Table space', 'Kiosk', 'Chair space'])) {
-            $room->custom_name = $validatedData['custom_name'] ?? null;
-            $room->custom_type = $validatedData['custom_type'] ?? null;
-            $room->custom_area = $validatedData['custom_area'] ?? null;
-            $room->custom_rate = $validatedData['custom_rate'] ?? null;
-            $room->expected_custom_rate = $expected_custom_rate ?? null;
+            $room->custom_name = $validatedData['custom_name'];
+            $room->custom_type = $validatedData['custom_type'];
+            $room->custom_area = $validatedData['custom_area'];
+            $room->custom_rate = $validatedData['custom_rate'];
+            $room->expected_custom_rate = $expected_custom_rate;
         }
-        
-
+    
         $room->save();
-
+    
+       
+    
+        // Redirect based on room type
         switch ($validatedData['room_type']) {
             case 'Flat':
-                return redirect()->route('admin.flats.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
-                case 'Shops':
-                return redirect()->route('admin.shops.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
+                return redirect()->route('admin.flats.index', ['building_id' => $validatedData['building_id']])
+                    ->with('success', 'Room added successfully!');
+            case 'Shops':
+                return redirect()->route('admin.shops.index', ['building_id' => $validatedData['building_id']])
+                    ->with('success', 'Room added successfully!');
             case 'Table space':
-                return redirect()->route('admin.table-spaces.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
+                return redirect()->route('admin.table-spaces.index', ['building_id' => $validatedData['building_id']])
+                    ->with('success', 'Room added successfully!');
             case 'Kiosk':
-                return redirect()->route('admin.kiosks.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
+                return redirect()->route('admin.kiosks.index', ['building_id' => $validatedData['building_id']])
+                    ->with('success', 'Room added successfully!');
             case 'Chair space':
-                return redirect()->route('admin.chair-spaces.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
+                return redirect()->route('admin.chair-spaces.index', ['building_id' => $validatedData['building_id']])
+                    ->with('success', 'Room added successfully!');
             default:
-                return redirect()->route('admin.rooms.index', ['building_id' => $validatedData['building_id']])->with('success', 'Room added successfully!');
-        }    
+                return redirect()->route('admin.rooms.index', ['building_id' => $validatedData['building_id']])
+                    ->with('success', 'Room added successfully!');
+        }
     }
     
     public function destroy($building_id, $room_id)
@@ -875,11 +872,10 @@ class RoomController extends Controller
             ->get();
     
         $page = 'custom-rooms'; // Or any other appropriate value
-        $installments = Installment::all();
-
     
-        return view('rooms.custom_rooms', compact('installments','rooms', 'building_id', 'page', 'building'));
+        return view('rooms.custom_rooms', compact('rooms', 'building_id', 'page', 'building'));
     }
+
         
     public function otherRoomTypesDifference($buildingId)
     {
@@ -907,4 +903,4 @@ class RoomController extends Controller
     }
 
     
-}    
+}

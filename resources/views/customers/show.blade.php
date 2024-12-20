@@ -117,12 +117,19 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($sale->cash_installments && $sale->cash_installments->isNotEmpty())
                             @foreach ($sale->cash_installments as $cash_installment)
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($cash_installment->installment_date)->format('d-m-Y') }}</td>
                                     <td>₹{{ number_format($cash_installment->installment_amount, 2) }}</td>
                                 </tr>
                             @endforeach
+                        @else
+                            <tr>
+                                <td colspan="2">No installments available.</td>
+                            </tr>
+                        @endif
+                        
                         </tbody>
                     </table>
                 </td>
@@ -133,10 +140,10 @@
                 <td colspan="2" class="bg-dark text-white fw-bold text-center">Summary</td>
             </tr>
             <tr>
-                <td colspan="2" class="text-center">
+                {{-- <td colspan="2" class="text-center">
                     <p><strong>Total (Cheque):</strong> ₹{{ number_format($totalChequeAmount, 2) }}</p>
                     <p><strong>Cash Total:</strong> ₹{{ number_format($totalCashAmount, 2) }}</p>
-                </td>
+                </td> --}}
             </tr>
         </tbody>
     </table>

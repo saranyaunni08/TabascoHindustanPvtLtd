@@ -75,14 +75,14 @@
               <span class="nav-link-text ms-1">Add Partner</span>
           </a>
       </li>
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link text-white" href="{{ route('admin.partners.cash_in_hand') }}">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">monetization_on</i> 
           </div>
           <span class="nav-link-text ms-1">Cash In Hand</span>
         </a>
-      </li>
+      </li> --}}
 
       <li class="nav-item">
         <a class="nav-link text-white {{ $page == 'create-roomtype' ? 'active bg-gradient-info' : '' }}" 
@@ -93,7 +93,17 @@
             <span class="nav-link-text ms-1">Create Room Type</span>
         </a>
       </li>
-      
+      <li class="nav-item">
+    <a class="nav-link text-white {{ $page == 'add-bank' ? 'active bg-gradient-info' : '' }}" 
+       href="{{ route('admin.banks.create') }}">
+        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="material-icons opacity-10">add_business</i> <!-- Icon for adding a new bank -->
+        </div>
+        <span class="nav-link-text ms-1">Add Bank</span>
+    </a>
+</li>
+
+
       
 
         @if(isset($rooms))
@@ -166,8 +176,19 @@
         </a>
     </li>
 
-   
-    
+      <li class="nav-item {{ $page == 'customer' ? 'active bg-gradient-info' : '' }}">
+        @if(isset($sale))
+        <a class="nav-link text-white" href="{{ route('admin.customers.show', ['saleId' => $sale->id]) }}">
+    @else
+        <a class="nav-link text-white" href="javascript:void(0);" onclick="alert('No sales data available!');">
+    @endif
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">people</i> <!-- Choose an appropriate icon -->
+            </div>
+            <span class="nav-link-text ms-1">Customer Sales</span>
+        </a>
+    </li>
+      
     
     
 
@@ -280,6 +301,42 @@
     <span class="nav-link-text ms-1">Sales Report</span>
   </a>
 </li>
+<li class="nav-item {{ $page == 'sales-return-report' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.salesreturn.returnreportall', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">assignment_return</i> <!-- Icon for sales return -->
+    <span class="nav-link-text ms-1">Sales Return Report</span>
+  </a>
+</li>
+<li class="nav-item {{ $page == 'exchange-report' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.exchangereport.exchange_report', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">sync_alt</i> <!-- Icon for exchange report -->
+    <span class="nav-link-text ms-1">Exchange Report</span>
+  </a>
+</li>
+<!-- Cash Book Link -->
+<li class="nav-item {{ $page == 'cash-book' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.cashbook.cash_book', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">book</i> <!-- Icon for cash book -->
+    <span class="nav-link-text ms-1">Cash Book</span>
+  </a>
+</li>
+<!-- Bank Account Link -->
+<li class="nav-item {{ $page == 'bank-account' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.bankaccount.bank_account', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">account_balance</i> <!-- Icon for bank account -->
+    <span class="nav-link-text ms-1">Bank Account</span>
+  </a>
+</li>
+
+<!-- Accounts Payable Link -->
+<li class="nav-item {{ $page == 'accounts-payable' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.Accountspayable.statementall', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">payment</i> <!-- Icon for accounts payable -->
+    <span class="nav-link-text ms-1">Accounts Payable</span>
+  </a>
+</li>
+
+
 
 
 

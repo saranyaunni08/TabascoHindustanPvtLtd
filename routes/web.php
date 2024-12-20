@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\CashBookController;
 use App\Http\Controllers\ExchangeController;
+use App\Http\Controllers\ExchangeReportController;
+use App\Http\Controllers\SalesReturnReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BuildingController;
@@ -12,14 +16,21 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterSettingsController;
 use App\Http\Controllers\EditDeleteAuthController;
 use App\Http\Controllers\ParkingController;
+use App\Http\Controllers\BankController;
+
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\StatementController;
+
 use App\Http\Controllers\TotalBuildUpAreaController;
 use App\Http\Controllers\SalesReportController;
+use App\Http\Controllers\AccountsPayableController;
+
+
+use App\Http\Controllers\InstallmentController;
 
 
 
@@ -73,6 +84,8 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
         Route::get('rooms/create/{building_id}', [RoomController::class, 'create'])->name('rooms.create');
         // Route::get('/rooms/create/{building_id}', [RoomController::class, 'create'])->name('rooms.create');
 
+
+
         Route::post('admin/rooms', [RoomController::class, 'store'])->name('rooms.store');
 
         Route::get('rooms', [RoomController::class, 'index'])->name('rooms.index');
@@ -113,7 +126,7 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
         Route::get('/buildingdashboard', [BuildingController::class, 'index'])->name('buildingdashboard');
 
 
-        Route::post('/installments/{sale}/mark-paid', [SaleController::class, 'markInstallmentPaid'])->name('installments.markPaid');
+        // Route::post('/installments/{sale}/mark-paid', [SaleController::class, 'markInstallmentPaid'])->name('installments.markPaid');
 
 
 
@@ -128,12 +141,18 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
         Route::get('/buildings/{building_id}/table-spaces', [RoomController::class, 'showTableSpaces'])->name('table-spaces.index');
 
 
-        Route::put('/installments/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
+        // Route::put('/installments/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
+
 
         Route::put('/installments/{id}/markAsPaid', [SaleController::class, 'markAsPaid'])
             ->name('installments.markAsPaid');
         Route::put('/customers/{customer}/installments/{installment}/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
         Route::put('/installments/markMultipleAsPaid', [SaleController::class, 'markMultipleAsPaid'])->name('installments.markMultipleAsPaid');
+
+        // Route::put('/installments/{id}/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
+        // Route::put('/customers/{customer}/installments/{installment}/markAsPaid', [SaleController::class, 'markAsPaid'])->name('installments.markAsPaid');
+        // Route::put('/installments/markMultipleAsPaid', [SaleController::class, 'markMultipleAsPaid'])->name('installments.markMultipleAsPaid');
+
 
         Route::put('/customers/{id}', [SaleController::class, 'update'])->name('customers.update');
 
@@ -142,10 +161,18 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
         Route::get('/customers/{customerName}/download', [SaleController::class, 'downloadCustomerDetails'])->name('customers.download');
         Route::get('/customers/download-pdf/{customerName}', [SaleController::class, 'downloadPdf'])->name('customers.downloadPdf');
 
+
         Route::get('/installments/{id}/downloadPdf', [SaleController::class, 'downloadInstallmentPdf'])->name('installments.downloadPdf');
         Route::get('/test-pdf', function () {
             return view('test_pdf');
         });
+
+
+        // Route::get('/installments/{id}/downloadPdf', [SaleController::class, 'downloadInstallmentPdf'])->name('installments.downloadPdf');
+        // Route::get('/test-pdf', function () {
+        //     return view('test_pdf');
+        // });
+
 
         Route::post('/sales/cancel', [SaleController::class, 'cancelSale'])->name('sales.cancel');
         Route::get('/sales/cancelled', [SaleController::class, 'listCancelledSales'])->name('sales.cancelled');
@@ -190,6 +217,7 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
         // Route to display the form for adding a new room type
         Route::get('/room-types/create', [RoomTypeController::class, 'create'])->name('room_types.create');
 
+
         // Route to store the new room type
         Route::post('/room-types', [RoomTypeController::class, 'store'])->name('room_types.store');
 
@@ -216,8 +244,12 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
 
         Route::get('/cheque-statement/download/{id}', [StatementController::class, 'downloadChequeStatement'])->name('cheque-statement.download');
 
+
         Route::get('/buildings/{buildingId}/customers', [SaleController::class, 'index'])
             ->name('building.customers');
+
+        Route::get('/buildings/{buildingId}/customers', [SaleController::class, 'index'])->name('building.customers');
+
 
         Route::get('/statements/commercial-sales-report', [StatementController::class, 'commercialSalesReport'])->name('statements.commercial-sales-report');
         //shops
@@ -235,25 +267,95 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
 
         Route::resource('parking', ParkingController::class);
 
+        //installment markig section 
+        Route::get('/sales/{saleId}/installments', [InstallmentController::class, 'show'])->name('installments.show');
+        Route::get('/sales/{saleId}/cash-installments', [InstallmentController::class, 'showCashInstallments'])->name('cash_installments.show');
 
-    Route::get('/total-build-up-area-detail/total_breakup/{building_id}', [TotalBuildUpAreaController::class, 'totalbuildup'])
-    ->name('totalbuildupexcel.total_breakup');
+        Route::post('/sales/{saleId}/installments/mark-paid', [InstallmentController::class, 'markPayment'])->name('installments.markPayment');
+        Route::post('/cash-installments/mark-payment/{sale}', [InstallmentController::class, 'cashMarkPayment'])->name('cashInstallments.markPayment');
+        // web.php
+        Route::get('/installments/download-pdf/{saleId}', [InstallmentController::class, 'downloadPdf'])->name('installments.downloadPdf');
+        //full page download of instllment marking page 
+        Route::get('/admin/installments/{saleId}/download-full-pdf', [InstallmentController::class, 'downloadFullInstallmentPdf'])->name('installments.downloadFullPdf');
+
+        // New route for the Confirm Exchange page
+        Route::get('/customer/exchange/{saleId}/{building_id}', [StatementController::class, 'confirmExchange'])->name('exchange.confirm');
+        // Route::post('/customer/exchange/update/{saleId}', [StatementController::class, 'updateExchange'])->name('exchange.update');
+        // Route::get('/sales/finalize-exchange/{saleId}', [StatementController::class, 'finalizeExchange'])->name('sales.finalizeexchange');
+        // routes/web.php
+        Route::get('/customer/exchange/availability/{building_id}/{sale_id}', [StatementController::class, 'showAvailability'])->name('exchange.availability');
+
+
+        Route::get('/customer/exchangesell', [ExchangeController::class, 'showExchangeSellPage'])->name('exchangesell');
+        Route::post('/exchangesales/store', [ExchangeController::class, 'store'])->name('exchangesales.store');
+
+        Route::get('/total-build-up-area-detail/total_breakup/{building_id}', [TotalBuildUpAreaController::class, 'totalbuildup'])
+            ->name('totalbuildupexcel.total_breakup');
 
         Route::get('/totalbuildupexcel.apartment_breakup/{building_id}', [TotalBuildUpAreaController::class, 'index'])->name('totalbuildupexcel.apartment_breakup');
-        Route::get('/totalbuildupexcel.commercial_breakup/{building_id}',[TotalBuildUpAreaController::class,'commercialbreakup'])->name('totalbuildupexcel.commercial_breakup');
-        Route::get('/totalbuildupexcel.parking_breakup/{building_id}',[TotalBuildUpAreaController::class,'parkingbreakup'])->name('totalbuildupexcel.parking_breakup');
-        Route::get('/totalbuildupexcel.summary/{building_id}',[TotalBuildUpAreaController::class,'summary'])->name('totalbuildupexcel.summary');
-        Route::get('/totalbuildupexcel.balance_summary/{building_id}',[TotalBuildUpAreaController::class,'balancesummary'])->name('totalbuildupexcel.balance_summary');
-        Route::get('/totalbuildupexcel.changes_in_expected_amount/{building_id}',[TotalBuildUpAreaController::class,'changesinExpectedamount'])->name('totalbuildupexcel.changes_in_expected_amount');
+        Route::get('/totalbuildupexcel.commercial_breakup/{building_id}', [TotalBuildUpAreaController::class, 'commercialbreakup'])->name('totalbuildupexcel.commercial_breakup');
+        Route::get('/totalbuildupexcel.parking_breakup/{building_id}', [TotalBuildUpAreaController::class, 'parkingbreakup'])->name('totalbuildupexcel.parking_breakup');
+        Route::get('/totalbuildupexcel.summary/{building_id}', [TotalBuildUpAreaController::class, 'summary'])->name('totalbuildupexcel.summary');
+        Route::get('/totalbuildupexcel.balance_summary/{building_id}', [TotalBuildUpAreaController::class, 'balancesummary'])->name('totalbuildupexcel.balance_summary');
+        Route::get('/totalbuildupexcel.changes_in_expected_amount/{building_id}', [TotalBuildUpAreaController::class, 'changesinExpectedamount'])->name('totalbuildupexcel.changes_in_expected_amount');
 
 
         Route::get('/availability-report/totalavailability/{building_id}', [AvailabilityController::class, 'totalavailability'])->name('availability.totalavailability');
-        Route::get('/availability.availabilityshop/{building_id}',[AvailabilityController::class,'availabilityshop'])->name('availability.availabilityshop');
-        Route::get('/availability.availabilityflat/{building_id}',[AvailabilityController::class,'availabilityflat'])->name('availability.availabilityflat');
-        Route::get('/availability.availabilityparking/{building_id}',[AvailabilityController::class,'availabilityparking'])->name('availability.availabilityparking');
-        Route::get('/availability.summary/{building_id}',[AvailabilityController::class,'summary'])->name('availability.summary');
+        Route::get('/availability.availabilityshop/{building_id}', [AvailabilityController::class, 'availabilityshop'])->name('availability.availabilityshop');
+        Route::get('/availability.availabilityflat/{building_id}', [AvailabilityController::class, 'availabilityflat'])->name('availability.availabilityflat');
+        Route::get('/availability.availabilityparking/{building_id}', [AvailabilityController::class, 'availabilityparking'])->name('availability.availabilityparking');
+        Route::get('/availability.summary/{building_id}', [AvailabilityController::class, 'summary'])->name('availability.summary');
 
-        Route::get('/sales-report/all/{building_id}',[SalesReportController::class,'allsales'])->name('sales.all');
+        Route::get('/sales-report/all/{building_id}', [SalesReportController::class, 'allsales'])->name('sales.all');
+        Route::get('/sales.commercial/{building_id}', [SalesReportController::class, 'commercial'])->name('sales.commercial');
+        Route::get('/sales.apartment/{building_id}', [SalesReportController::class, 'apartment'])->name('sales.apartment');
+        Route::get('/sales.parking/{building_id}', [SalesReportController::class, 'parking'])->name('sales.parking');
+        Route::get('/sales.summary/{building_id}', [SalesReportController::class, 'summary'])->name('sales.summary');
+
+        Route::get('/sales-return-report/returnreportall/{building_id}', [SalesReturnReportController::class, 'returnreportall'])->name('salesreturn.returnreportall');
+        Route::get('/salesreturn.commercial/{building_id}', [SalesReturnReportController::class, 'commercialreturn'])->name('salesreturn.commercial');
+        Route::get('/salesreturn.apartment/{building_id}', [SalesReturnReportController::class, 'apartmentreturn'])->name('salesreturn.apartment');
+        Route::get('/salesreturn.parking/{building_id}', [SalesReturnReportController::class, 'parkingreturn'])->name('salesreturn.parking');
+
+        Route::get('/exchange-report/exchange_report/{building_id}', [ExchangeReportController::class, 'exchangereturnreport'])->name('exchangereport.exchange_report');
+        Route::get('/exchangereturn.exchangeandreturnsummary/{building_id}', [ExchangeReportController::class, 'exchangeandreturnsummary'])->name('exchangereport.exchangeandreturnsummary');
+
+        Route::get('/cash-book/cash_book/{building_id}', [CashBookController::class, 'cashbook'])->name('cashbook.cash_book');
+        Route::get('/cashbook.BasheerCurrentAccount/{building_id}', [CashBookController::class, 'basheercurrentaccount'])->name('cashbook.BasheerCurrentAccount');
+        Route::get('/cashbook.PavoorCurrentAccount/{building_id}', [CashBookController::class, 'pavoorcurrentaccount'])->name('cashbook.PavoorCurrentAccount');
+
+        Route::get('/bank-account/bank_account/{building_id}', [BankAccountController::class, 'bankaccount'])->name('bankaccount.bank_account');
+        Route::get('/bankaccount.bank_axisbankaccount/{building_id}', [BankAccountController::class, 'axisbank'])->name('bankaccount.axisbankaccount');
+        Route::get('/bankaccount/canarabankaccount/{building_id}', [BankAccountController::class, 'canarabank'])->name('bankaccount.canarabankaccount');
+        Route::get('/bankaccount/sbiaccount/{building_id}', [BankAccountController::class, 'sbi'])->name('bankaccount.sbiaccount');
+
+
+        Route::get('/accounts-payable/statementall/{building_id}', [AccountsPayableController::class, 'statementall'])->name('Accountspayable.statementall');
+        Route::get('/Accountspayable/statementcheque/{building_id}', [AccountsPayableController::class, 'statementcheque'])->name('Accountspayable.statementcheque');
+        Route::get('/Accountspayable/statementcash/{building_id}', [AccountsPayableController::class, 'statementcash'])->name('Accountspayable.statementcash');
+
+        Route::get('/Accountspayable/download/{buildingId}', [AccountsPayableController::class, 'statementall'])->name('Accountspayable.downloadStatement');
+
+        Route::get('/banks/create', [BankController::class, 'create'])->name('banks.create');
+
+        Route::post('/banks/store', [BankController::class, 'store'])->name('banks.store');
+
+        Route::get('/banks/views', [BankController::class, 'views'])->name('banks.views');
+
+        // Define a route for editing a specific bank
+        Route::get('/banks/edit/{id}', [BankController::class, 'edit'])->name('banks.edit');
+
+        Route::delete('/banks/{bank}', [BankController::class, 'destroy'])->name('banks.destroy');
+
+        Route::put('/banks/{id}', [BankController::class, 'update'])->name('banks.update');
+
+
+
+
+
+
+
+
 
 
 
