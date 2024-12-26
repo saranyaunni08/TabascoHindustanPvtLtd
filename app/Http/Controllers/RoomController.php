@@ -269,7 +269,11 @@ class RoomController extends Controller
     {
         $building_id = $request->building_id;
         $room_type = $request->room_type;
+
         $roomTypes = RoomType::pluck('name')->toArray();
+
+        $roomTypes = RoomType::all();
+
         $building = Building::findOrFail($building_id);
 
         // Fetch room types from the database

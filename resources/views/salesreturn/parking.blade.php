@@ -50,8 +50,9 @@
     </style>
 
 
-<!-- PARKING SECTION -->
-<div class="section-header">PARKING SALES RETURN REPORT</div>
+    <!-- PARKING SECTION -->
+   <!-- PARKING SECTION -->
+<div class="section-header">PARKING SALES REURN REPORT</div>
 <table>
     <thead>
         <tr>
@@ -64,16 +65,37 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Parking</td>
-            <td>1</td>
-            <td>4th</td>
-            <td>25000</td>
-            <td>Vijayan</td>
-            <td>Paid</td>
+        @php
+            $totalSalesAmount = 0;
+        @endphp
+        @forelse ($parkingDetails as $parking)
+            @php
+                $sale = $parking->sale ?? null;
+                $parkingData = $sale->parking ?? null;
+                $salesAmount = $sale->sale_amount ?? 0;
+                $totalSalesAmount += $salesAmount;
+            @endphp
+            <tr>
+                <td>Parking</td>
+                <td>{{ $parkingData->slot_number ?? 'N/A' }}</td>
+                <td>{{ $parkingData->parking_floor ?? 'N/A' }}</td>
+                <td>{{ number_format($salesAmount) }}</td>
+                <td>{{ $sale->customer_name ?? 'N/A' }}</td>
+                <td>{{ $sale->status ?? 'N/A' }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="6">No parking details available.</td>
+            </tr>
+        @endforelse
+        <tr class="total-row">
+            <td colspan="3"><strong>Total</strong></td>
+            <td>{{ number_format($totalSalesAmount) }}</td>
+            <td colspan="2"></td>
         </tr>
-        </tbody>
-        </table>
+    </tbody>
+</table>
+
 
     </div>
 

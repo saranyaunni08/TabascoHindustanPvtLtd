@@ -23,6 +23,7 @@ public function store(Request $request)
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'account_number' => 'required|string|max:20',
+        'account_holder_name' => 'required|string|max:255',
         'ifsc_code' => 'required|string|max:20',
         'branch' => 'required|string|max:255',
         'address' => 'nullable|string|max:255',
@@ -35,6 +36,7 @@ public function store(Request $request)
     $bank = new banks();
     $bank->name = $validated['name'];
     $bank->account_number = $validated['account_number'];
+    $bank->account_holder_name =$validated['account_holder_name'];
     $bank->ifsc_code = $validated['ifsc_code'];
     $bank->branch = $validated['branch'];
     $bank->address = $validated['address'];
@@ -75,6 +77,7 @@ public function update(Request $request, $id)
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'account_number' => 'required|string|max:20',
+        'account_holder_name' => 'required|string|max:255',
         'ifsc_code' => 'required|string|max:20',
         'branch' => 'required|string|max:255',
         'address' => 'nullable|string|max:255',
@@ -90,6 +93,7 @@ public function update(Request $request, $id)
     // Update the bank details
     $bank->name = $validated['name'];
     $bank->account_number = $validated['account_number'];
+    $bank->account_holder_name = $validated['account_holder_name'];
     $bank->ifsc_code = $validated['ifsc_code'];
     $bank->branch = $validated['branch'];
     $bank->address = $validated['address'] ?? $bank->address; // Use the existing address if not provided

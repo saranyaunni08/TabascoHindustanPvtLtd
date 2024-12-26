@@ -86,8 +86,8 @@
                 <td>{{ $row->room_number }}</td>
                 <td>{{ $row->room_type }}</td>
                 <td>{{ number_format($row->build_up_area) }}</td>
-                <td>{{ number_format($row->sales_amount) }}</td>
-                <td>{{ number_format($row->total_sale_amount) }}</td>
+                <td>{{ number_format($row->sale_amount) }}</td>
+                <td>{{ number_format($row->build_up_area * $row->sale_amount, 2) }}</td>
                 <td>{{ $row->customer_name }}</td>
             </tr>
             @endforeach
@@ -126,8 +126,8 @@
                 <td>{{ $row->room_number }}</td>
                 <td>{{ $row->room_type }}</td>
                 <td>{{ number_format($row->flat_build_up_area) }}</td>
-                <td>{{ number_format($row->sales_amount) }}</td>
-                <td>{{ number_format($row->total_sale_amount) }}</td>
+                <td>{{ number_format($row->sale_amount) }}</td>
+                <td>{{ number_format($row->build_up_area * $row->sale_amount, 2) }}</td>
                 <td>{{ $row->customer_name }}</td>
             </tr>
             @endforeach
@@ -160,7 +160,7 @@
             @foreach ($parkingSalesData as $sale)
             <tr>
                 <td>{{ $sale->floor_number }}</td>
-                <td>{{ $sale->slot_number }}</td>
+                <td>{{ $sale->parking_id }}</td>
                 <td>{{ number_format($sale->sale_amount) }}</td>
                 <td>{{ $sale->purchaser_name }}</td>
             </tr>
@@ -168,7 +168,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2" style="font-weight: bold;">TOTAL</td>
+                <td colspan="1" style="font-weight: bold;">TOTAL</td>
+                <td>{{ number_format($totalparkingnumber)}}</td>
                 <td>{{ number_format($totalParkingSales) }}</td>
                 <td></td>
             </tr>

@@ -78,7 +78,7 @@
                 <td>{{ $row->room_type }}</td>
                 <td>{{ number_format($row->flat_build_up_area) }}</td>
                 <td>{{ number_format($row->sales_amount) }}</td>
-                <td>{{ number_format($row->total_sale_amount) }}</td>
+                <td>{{ number_format($row->build_up_area * $row->sale_amount, 2) }}</td>
                 <td>{{ $row->customer_name }}</td>
             </tr>
             @endforeach

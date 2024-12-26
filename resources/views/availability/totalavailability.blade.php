@@ -89,30 +89,40 @@
         </tbody>
     </table>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 16px;">
     <thead>
         <!-- Title Row -->
         <tr>
             <th colspan="5"
-                style="text-align: center; background-color: #004080; color: white; padding: 10px; border: 1px solid #000; font-size: 20px;">
+                style="text-align: center; background-color: #004080; color: white; padding: 15px; border: 1px solid #000; font-size: 22px;">
                 COUNTER
             </th>
         </tr>
         <!-- Headers -->
         <tr>
-            <th style="border: 1px solid #000; text-align: center; padding: 8px; background-color: #d9d9d9;">NO</th>
-            <th style="border: 1px solid #000; text-align: center; padding: 8px; background-color: #d9d9d9;">FLOOR</th>
-            <th style="border: 1px solid #000; text-align: center; padding: 8px; background-color: #d9d9d9;">TYPE</th>
-            <th style="border: 1px solid #000; text-align: center; padding: 8px; background-color: #d9d9d9;">COUNTER NUMBER</th>
-            <th style="border: 1px solid #000; text-align: center; padding: 8px; background-color: #d9d9d9;">NAME</th>
+            <th style="border: 1px solid #000; text-align: center; padding: 12px; background-color: #d9d9d9;">NO</th>
+            <th style="border: 1px solid #000; text-align: center; padding: 12px; background-color: #d9d9d9;">FLOOR</th>
+            <th style="border: 1px solid #000; text-align: center; padding: 12px; background-color: #d9d9d9;">TYPE</th>
+            <th style="border: 1px solid #000; text-align: center; padding: 12px; background-color: #d9d9d9;">COUNTER NUMBER</th>
+            <th style="border: 1px solid #000; text-align: center; padding: 12px; background-color: #d9d9d9;">NAME</th>
         </tr>
     </thead>
     <tbody>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        @forelse ($counterRooms as $index => $room)
+            <tr>
+                <td style="border: 1px solid #000; text-align: center; padding: 10px;">{{ $index + 1 }}</td>
+                <td style="border: 1px solid #000; text-align: center; padding: 10px;">{{ $room->room_floor }}</td>
+                <td style="border: 1px solid #000; text-align: center; padding: 10px;">{{ $room->custom_type }}</td>
+                <td style="border: 1px solid #000; text-align: center; padding: 10px;">{{ $room->room_number }}</td>
+                <td style="border: 1px solid #000; text-align: center; padding: 10px;">---</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" style="border: 1px solid #000; text-align: center; padding: 12px;">
+                    No counters available.
+                </td>
+            </tr>
+        @endforelse
     </tbody>
 </table>
 

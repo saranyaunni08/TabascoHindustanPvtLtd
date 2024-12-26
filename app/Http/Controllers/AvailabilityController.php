@@ -28,11 +28,16 @@ class AvailabilityController extends Controller
                 return $room;
             });
 
+        $counterRooms = Room::where('building_id', $buildingId)
+            ->where('room_type', 'Counter') // Filter only counter rooms
+            ->select(['room_floor', 'custom_type', 'room_number', 'room_type']) // Select required columns
+            ->get();
+
         // Pass the data to the view
         $title = 'Total Availability';
         $page = 'availability-report';
 
-        return view('availability.totalavailability', compact('building', 'availability', 'title', 'page', 'parkings'));
+        return view('availability.totalavailability', compact('building', 'availability', 'title', 'page', 'parkings','counterRooms'));
     }
 
     public function availabilityshop($buildingId)
@@ -165,7 +170,7 @@ class AvailabilityController extends Controller
         $page = 'summary';
 
         // Pass data to the view
-        return view('availability.summary', compact('building', 'title', 'page', 'totalBuildUpArea', 'totalCarpetArea', 'totalShops', 'totalFlats', 'totalFlatCarpetArea', 'totalFlatBuildUpArea', 'totalnos', 'totalbuildup', 'totalcarpet','totalparking'));
+        return view('availability.summary', compact('building', 'title', 'page', 'totalBuildUpArea', 'totalCarpetArea', 'totalShops', 'totalFlats', 'totalFlatCarpetArea', 'totalFlatBuildUpArea', 'totalnos', 'totalbuildup', 'totalcarpet', 'totalparking'));
     }
 
 

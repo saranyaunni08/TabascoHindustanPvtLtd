@@ -14,6 +14,7 @@
                             <th>Serial Number</th>
                             <th>Bank Name</th>
                             <th>Account Number</th>
+                            <th>Account Holder Name</th>
                             <th>IFSC Code</th>
                             <th>Branch</th>
                             <th>Address</th>
@@ -30,6 +31,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $bank->name }}</td>
                             <td>{{ $bank->account_number }}</td>
+                            <td>{{ $bank->account_holder_name }}</td>
                             <td>{{ $bank->ifsc_code }}</td>
                             <td>{{ $bank->branch }}</td>
                             <td>{{ $bank->address }}</td>

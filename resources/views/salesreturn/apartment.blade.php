@@ -51,7 +51,6 @@
     </style>
 
 
-<!-- APARTMENTS SECTION -->
 <div class="section-header">APARTMENTS SALES RETURN REPORT</div>
 <table>
     <thead>
@@ -67,46 +66,48 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1BHK</td>
-            <td>B</td>
-            <td>6th</td>
-            <td>734</td>
-            <td>4,750</td>
-            <td>34,86,500</td>
-            <td>madhusoodanan</td>
-            <td>Paid</td>
-        </tr>
-        <tr>
-            <td>2 BHK</td>
-            <td>A1</td>
-            <td>7th</td>
-            <td>979</td>
-            <td>3,400</td>
-            <td>33,28,600</td>
-            <td>Suresh</td>
-            <td>Payable</td>
-        </tr>
-        <tr>
-            <td>2 BHK</td>
-            <td>A1</td>
-            <td>11th</td>
-            <td>979</td>
-            <td>3,500</td>
-            <td>34,26,500</td>
-            <td>Savithri</td>
-            <td>Payable</td>
-        </tr>
-        <tr class="total-row">
-            <td colspan="3">Total</td>
-            <td>2,692</td>
-            <td></td>
-            <td>1,02,41,600</td>
-            <td></td>
-            <td></td>
-        </tr>
+        @php
+            $totalSqft = 0;
+            $totalSaleAmount = 0;
+        @endphp
+        @forelse ($salesFlats as $flat)
+            @php
+                $room = $flat->sale->room ?? null;
+                $sqft = $room->flat_build_up_area ?? 0;
+                $salePrice = $flat->sale->sale_amount ?? 0;
+                $calculatedTotal = $sqft * $salePrice;
+
+                $totalSqft += $sqft;
+                $totalSaleAmount += $calculatedTotal;
+            @endphp
+            <tr>
+                <td>{{ $room->room_type ?? 'N/A' }}</td>
+                <td>{{ $room->room_number ?? 'N/A' }}</td>
+                <td>{{ $room->room_floor ?? 'N/A' }}</td>
+                <td>{{ $sqft }}</td>
+                <td>{{ number_format($salePrice) }}</td>
+                <td>{{ number_format($calculatedTotal) }}</td>
+                <td>{{ $flat->sale->customer_name ?? 'N/A' }}</td>
+                <td>{{ $flat->sale->status ?? 'N/A' }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="8">No apartment details available.</td>
+            </tr>
+        @endforelse
+        @if(count($salesFlats) > 0)
+            <tr class="total-row">
+                <td colspan="3">Total</td>
+                <td>{{ $totalSqft }}</td>
+                <td></td>
+                <td>{{ number_format($totalSaleAmount) }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        @endif
     </tbody>
 </table>
+
 
 
 

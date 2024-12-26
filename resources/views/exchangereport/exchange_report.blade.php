@@ -95,25 +95,23 @@
                         @php
                             // Accumulate totals
                             $totalSqft += $sale->build_up_area;
-                            $totalSaleAmount += $sale->sale_amount;
+                            $totalSaleAmount += $sale->sale_amount * $sale->build_up_area;
 
                             if ($sale->exchangedSale) {
                                 $totalExchangedSqft += $sale->exchangedSale->exchange_build_up_area ?? 0;
-                                $totalExchangedSaleAmount += $sale->exchangedSale->exchange_sale_amount ?? 0;
+                                $totalExchangedSaleAmount += $sale->exchangedSale->exchange_build_up_area * $sale->exchangedSale->exchange_sale_amount ?? 0;
 
                                 $payableReceivable = $sale->sale_amount - $sale->exchangedSale->exchange_sale_amount;
                             } else {
                                 $payableReceivable = 0;
                             }
-
-                            $totalPayableReceivable += $payableReceivable;
                         @endphp
 
                         <tr>
                             <!-- Original Sale Data -->
                             <td>{{ $sale->customer_name }}</td>
                             <td>{{ $sale->room_floor }}</td>
-                            <td>{{ $sale->shop_number }}</td>
+                            <td>{{ $sale->room_number }}</td>
                             <td>{{ $sale->room_type }}</td>
                             <td>{{ $sale->build_up_area }}</td>
                             <td>{{ number_format($sale->sale_amount, 2) }}</td>
@@ -121,27 +119,34 @@
 
                             <!-- Exchanged Sale Data -->
                             <td>{{ $sale->exchangedSale ? $sale->exchangedSale->exchange_room_floor : '' }}</td>
-                            <td>{{ $sale->exchangedSale ? $sale->exchangedSale->exchange_shop_number : '' }}</td>
+                            <td>{{ $sale->exchangedSale ? $sale->exchangedSale->exchange_room_number : '' }}</td>
                             <td>{{ $sale->exchangedSale ? $sale->exchangedSale->exchange_room_type : '' }}</td>
                             <td>{{ $sale->exchangedSale ? $sale->exchangedSale->exchange_build_up_area : '' }}</td>
                             <td>{{ $sale->exchangedSale && $sale->exchangedSale->exchange_sale_amount ? number_format($sale->exchangedSale->exchange_sale_amount, 2) : '0.00' }}
+                            </td>
+                            <td>
+                                {{ $sale->exchangedSale && $sale->exchangedSale->exchange_build_up_area && $sale->exchangedSale->exchange_sale_amount
+                    ? number_format($sale->exchangedSale->exchange_build_up_area * $sale->exchangedSale->exchange_sale_amount, 2)
+                    : '0.00' }}
                             </td>
 
                             <!-- Payable/Receivable Amount -->
                             <td>
                                 @php
-                                    // Calculate Payable/Receivable for this row
                                     $payableReceivable = 0;
 
-                                    if ($sale->exchangedSale) {
-                                        $payableReceivable = ($sale->sale_amount * $sale->build_up_area) - ($sale->exchangedSale->exchange_sale_amount * $sale->exchangedSale->exchange_build_up_area);
+                                    if ($sale->exchangedSale && $sale->build_up_area && $sale->sale_amount) {
+                                        $payableReceivable = ($sale->sale_amount * $sale->build_up_area) -
+                                            ($sale->exchangedSale->exchange_sale_amount * $sale->exchangedSale->exchange_build_up_area);
                                     }
                                 @endphp
-
                                 {{ number_format($payableReceivable, 2) }}
                             </td>
                         </tr>
+
+                        @php    $totalPayableReceivable += $payableReceivable; @endphp
             @endforeach
+
         </tbody>
 
         <!-- Totals Row -->
@@ -149,14 +154,14 @@
             <tr>
                 <th colspan="4">Total</th>
                 <th>{{ $totalSqft }}</th>
-                <th>{{ number_format($totalSaleAmount, 2) }}</th>
                 <th></th> <!-- Total for Original Total Sale Amount if needed -->
+                <th>{{ number_format($totalSaleAmount, 2) }}</th>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th>{{ $totalExchangedSqft }}</th>
-                <th>{{ number_format($totalExchangedSaleAmount, 2) }}</th>
                 <th></th>
+                <th>{{ number_format($totalExchangedSaleAmount, 2) }}</th>
                 <th>{{ number_format($totalPayableReceivable, 2) }}</th>
             </tr>
         </tfoot>

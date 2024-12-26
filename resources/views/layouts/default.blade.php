@@ -277,12 +277,7 @@
 </li>
 
 
-  <li class="nav-item {{ $page == 'cancelled-sales' ? 'active bg-gradient-info' : '' }}">
-    <a class="nav-link" href="{{ route('admin.sales.cancelled') }}">
-        <i class="material-icons opacity-10">cancel</i>
-        <span class="nav-link-text">Cancelled Sales</span>
-    </a>
-</li>
+
 <li class="nav-item {{ $page == 'total-build-up-area-detail' ? 'active bg-gradient-info' : '' }}">
 <a class="nav-link" href="{{ route('admin.totalbuildupexcel.total_breakup', ['building_id' => $building->id]) }}">
       <i class="material-icons opacity-10">apartment</i> <!-- Icon for total build-up area detail -->
@@ -335,6 +330,7 @@
     <span class="nav-link-text ms-1">Accounts Payable</span>
   </a>
 </li>
+
 
 
 

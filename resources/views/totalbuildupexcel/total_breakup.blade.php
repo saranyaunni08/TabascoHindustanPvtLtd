@@ -53,6 +53,7 @@
             @php
     $expected_per_sqft = $apartment->flat_build_up_area > 0 ? $apartment->expected_amount / $apartment->flat_build_up_area : 0;
     $sale_per_sqft = $apartment->flat_build_up_area > 0 ? $apartment->sale_amount / $apartment->flat_build_up_area : 0;  // Calculate sale per sqft
+    $difference = $apartment->expected_amount - $apartment->sale_amount;
 
 @endphp
 
@@ -67,8 +68,8 @@
                 <td>₹ {{ number_format($apartment->expected_amount, 2) }}</td>
                 <td>₹ {{ number_format($apartment->sale_amount, 2) }}</td>
                 <td>₹ {{ number_format($sale_per_sqft, 2) }}</td>
-                <td style="color: {{ $apartment->difference < 0 ? 'red' : 'green' }};">₹
-                    {{ number_format($apartment->difference, 2) }}
+                <td style="color: {{ $difference < 0 ? 'red' : 'green' }};">₹
+                    {{ number_format($difference, 2) }}
                 </td>
                 <td style="color: {{ $apartment->status == 'SOLD' ? 'green' : 'blue' }};">{{ $apartment->status }}</td>
             </tr>
@@ -85,9 +86,11 @@
                 <td colspan="3" style="text-align: right;">TOTAL</td>
                 <td>{{ $totalBuildUpArea }}</td>
                 <td>{{ $totalCarpetArea }}</td>
+                <td></td>
                 <td>₹ {{ number_format($totalExpectedAmount, 2) }}</td>
                 <td>₹ {{ number_format($totalSaleAmount, 2) }}</td>
-                <td>₹ {{ number_format($totalDifference, 2) }}</td>
+                <td></td>
+                <td>-₹ {{ number_format($totalDifference, 2) }}</td>
                 <td></td>
             </tr>
         </tbody>
@@ -123,6 +126,8 @@
             @php
     $expected_per_sqft = $space->build_up_area > 0 ? $space->expected_amount / $space->build_up_area : 0;
     $sale_per_sqft = $space->build_up_area > 0 ? $space->sale_amount / $space->build_up_area : 0;  // Calculate sale per sqft
+    $difference = $space->expected_amount - $space->sale_amount;
+
 
 @endphp
                         <tr>
@@ -135,8 +140,8 @@
                             <td>₹ {{ number_format($space->expected_amount, 2) }}</td>
                             <td>₹ {{ number_format($space->sale_amount, 2) }}</td>
                             <td>₹ {{ number_format($sale_per_sqft, 2) }}</td>
-                            <td style="color: {{ $space->difference < 0 ? 'red' : 'green' }};">₹
-                                {{ number_format($space->difference, 2) }}</td>
+                            <td style="color: {{ $difference < 0 ? 'red' : 'green' }};">₹
+                                {{ number_format($difference, 2) }}</td>
                             <td style="color: {{ $space->status == 'SOLD' ? 'green' : 'blue' }};">{{ $space->status }}</td>
                         </tr>
                         @php
@@ -152,9 +157,11 @@
                 <td colspan="3" style="text-align: right;">TOTAL</td>
                 <td>{{ $totalBuildUpArea }}</td>
                 <td>{{ $totalCarpetArea }}</td>
+                <td></td>
                 <td>₹ {{ number_format($totalExpectedAmount, 2) }}</td>
                 <td>₹ {{ number_format($totalSaleAmount, 2) }}</td>
-                <td>₹ {{ number_format($totalDifference, 2) }}</td>
+                <td></td>
+                <td>-₹ {{ number_format($totalDifference, 2) }}</td>
                 <td></td>
             </tr>
         </tbody>
@@ -179,37 +186,39 @@
             </tr>
         </thead>
         <tbody>
-            @php
-                $totalExpectedSale = $totalSaleAmount = $totalDifference = 0;
-            @endphp
-            @foreach ($parkings as $parking)
-                        <tr>
-                            <td>{{ $parking->room_floor }}</td>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $parking->slot_number }}</td>
-                            <td>{{ $parking->purchaser_name }}</td>
-                            <td>₹ {{ number_format($parking->amount, 2) }}</td>
-                            <td>₹ {{ number_format($parking->sale_amount, 2) }}</td>
+    @php
+        $totalExpectedSale = $totalSaleAmount = $totalDifference = 0;
+    @endphp
+    @foreach ($parkings as $parking)
+        @php
+            $difference = $parking->amount - $parking->sale_amount;
+            $totalExpectedSale += $parking->amount;
+            $totalSaleAmount += $parking->sale_amount;
+            $totalDifference += $difference;
+        @endphp
+        <tr>
+            <td>{{ $parking->room_floor }}</td>
+            <td>{{ $loop->iteration }}</td>
+            <td>{{ $parking->slot_number }}</td>
+            <td>{{ $parking->purchaser_name }}</td>
+            <td>₹ {{ number_format($parking->amount, 2) }}</td>
+            <td>₹ {{ number_format($parking->sale_amount, 2) }}</td>
+            <td style="color: {{ $difference < 0 ? 'red' : 'green' }};">₹
+                {{ number_format($difference, 2) }}
+            </td>
+            <td style="color: {{ $parking->status == 'SOLD' ? 'green' : 'blue' }};">{{ $parking->status }}</td>
+        </tr>
+    @endforeach
 
-                            <td style="color: {{ $parking->difference < 0 ? 'red' : 'green' }};">₹
-                                {{ number_format($parking->difference, 2) }}</td>
-                            <td style="color: {{ $parking->status == 'SOLD' ? 'green' : 'blue' }};">{{ $parking->status }}</td>
-                        </tr>
-                        @php
-                            $totalExpectedSale += $parking->expected_amount;
-                            $totalSaleAmount += $parking->sale_amount;
-                            $totalDifference += $parking->difference;
-                        @endphp
-            @endforeach
+    <tr style="font-weight: bold; background-color: #f8f9fa;">
+        <td colspan="4" class="text-center"><strong>TOTAL</strong></td>
+        <td>₹ {{ number_format($totalExpectedSale, 2) }}</td>
+        <td>₹ {{ number_format($totalSaleAmount, 2) }}</td>
+        <td>-₹ {{ number_format($totalDifference, 2) }}</td>
+        <td></td>
+    </tr>
+</tbody>
 
-            <tr style="font-weight: bold; background-color: #f8f9fa;">
-                <td colspan="4" class="text-center"><strong>TOTAL</strong></td>
-                <td>₹ {{ number_format($totalExpectedSale, 2) }}</td>
-                <td>₹ {{ number_format($totalSaleAmount, 2) }}</td>
-                <td>₹ {{ number_format($totalDifference, 2) }}</td>
-                <td></td>
-            </tr>
-        </tbody>
     </table>
 
 </div>

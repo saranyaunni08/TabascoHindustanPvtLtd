@@ -13,6 +13,7 @@
     <!-- Form to add bank details -->
     <form action="{{ route('admin.banks.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        
 
         <div class="card">
             <div class="card-body">
@@ -31,6 +32,16 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
+                
+                <div class="form-group mb-3">
+                    <label for="account_number">Account Holder Name</label>
+                    <input type="text" class="form-control @error('account_holder_name') is-invalid @enderror" id="account_holder_name" name="account_holder_name" value="{{ old('account_holder_name') }}" required>
+                    @error('account_holder_name')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+
 
                 <div class="form-group mb-3">
                     <label for="ifsc_code">IFSC Code</label>

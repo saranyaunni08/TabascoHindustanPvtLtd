@@ -2,42 +2,50 @@
 
 @section('content')
 <div class="container">
-    <table>
-        <thead>
-            <!-- SALES SUMMARY Header Inside Table -->
-            <tr>
-                <th colspan="3" class="table-header">SALES SUMMARY</th>
-            </tr>
-            <!-- Column Headers -->
-            <tr>
-                <th>TYPE</th>
-                <th>SQFT</th>
-                <th>SALE AMOUNT</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>SHOP</td>
-                <td>{{ number_format(53978) }}</td>
-                <td>{{ number_format(547231300) }}</td>
-            </tr>
-            <tr>
-                <td>APARTMENTS</td>
-                <td>{{ number_format(60573) }}</td>
-                <td>{{ number_format(248115934) }}</td>
-            </tr>
-            <tr>
-                <td>PARKING</td>
-                <td>{{ number_format(38) }}</td>
-                <td>{{ number_format(10645000) }}</td>
-            </tr>
-            <tr class="total-row">
-                <td>TOTAL SALES</td>
-                <td>{{ number_format(114551) }}</td>
-                <td>{{ number_format(805992234) }}</td>
-            </tr>
-        </tbody>
-    </table>
+<table>
+    <thead>
+        <!-- SALES SUMMARY Header Inside Table -->
+        <tr>
+            <th colspan="3" class="table-header">SALES SUMMARY</th>
+        </tr>
+        <!-- Column Headers -->
+        <tr>
+            <th>TYPE</th>
+            <th>SQFT</th>
+            <th>SALE AMOUNT</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Dynamic Data for SHOP -->
+        <tr>
+            <td>SHOP</td>
+            <td>{{ number_format($totalShopSqft) }}</td>
+            <td>{{ number_format($totalShopSaleAmount) }}</td>
+        </tr>
+
+        <!-- Dynamic Data for APARTMENTS -->
+        <tr>
+            <td>APARTMENTS</td>
+            <td>{{ number_format($totalApartmentSqft) }}</td>
+            <td>{{ number_format($totalApartmentSaleAmount) }}</td>
+        </tr>
+
+        <!-- Dynamic Data for PARKING -->
+        <tr>
+            <td>PARKING</td>
+            <td>{{ number_format($totalparkingnumber)}}</td>
+            <td>{{ number_format($totalParkingSales) }}</td>
+        </tr>
+
+        <!-- Total Sales Row -->
+        <tr class="total-row">
+            <td>TOTAL SALES</td>
+            <td>{{ number_format($totalSqft) }}</td>
+            <td>{{ number_format($totalShopSaleAmount + $totalApartmentSaleAmount + $totalParkingSales) }}</td>
+        </tr>
+    </tbody>
+</table>
+
 </div>
 
 <style>

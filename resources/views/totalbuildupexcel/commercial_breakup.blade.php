@@ -32,6 +32,8 @@
             @php
     $expected_per_sqft = $space->build_up_area > 0 ? $space->expected_amount / $space->build_up_area : 0;
     $sale_per_sqft = $space->build_up_area > 0 ? $space->sale_amount / $space->build_up_area : 0;  // Calculate sale per sqft
+    $difference = $space->expected_amount - $space->sale_amount;
+
 
 @endphp
                         <tr>
@@ -44,8 +46,8 @@
                             <td>₹ {{ number_format($space->expected_amount, 2) }}</td>
                             <td>₹ {{ number_format($space->sale_amount, 2) }}</td>
                             <td>₹ {{ number_format($sale_per_sqft, 2) }}</td>
-                            <td style="color: {{ $space->difference < 0 ? 'red' : 'green' }};">₹
-                                {{ number_format($space->difference, 2) }}</td>
+                            <td style="color: {{ $difference < 0 ? 'red' : 'green' }};">₹
+                                {{ number_format($difference, 2) }}</td>
                             <td style="color: {{ $space->status == 'SOLD' ? 'green' : 'blue' }};">{{ $space->status }}</td>
                         </tr>
                         @php
@@ -61,9 +63,11 @@
                 <td colspan="3" style="text-align: right;">TOTAL</td>
                 <td>{{ $totalBuildUpArea }}</td>
                 <td>{{ $totalCarpetArea }}</td>
+                <td></td>
                 <td>₹ {{ number_format($totalExpectedAmount, 2) }}</td>
                 <td>₹ {{ number_format($totalSaleAmount, 2) }}</td>
-                <td>₹ {{ number_format($totalDifference, 2) }}</td>
+                <td></td>
+                <td>-₹ {{ number_format($totalDifference, 2) }}</td>
                 <td></td>
             </tr>
         </tbody>

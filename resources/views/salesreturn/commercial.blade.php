@@ -49,71 +49,61 @@
         }
     </style>
 
-    <!-- COMMERCIAL SECTION -->
-    <div class="section-header">COMMERCIAL SALES RETURN REPORT</div>
-    <table>
-        <thead>
+   <!-- COMMERCIAL SECTION -->
+   <div class="section-header">COMMERCIAL SALES RETURN REPORT</div>
+<table>
+    <thead>
+        <tr>
+            <th>TYPE</th>
+            <th>SHOP NO</th>
+            <th>FLOOR</th>
+            <th>SQFT</th>
+            <th>SALES PRICE</th>
+            <th>TOTAL SALE AMOUNT</th>
+            <th>CLIENT NAME</th>
+            <th>STATUS</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $totalSqft = 0;
+            $totalSaleAmount = 0;
+        @endphp
+        @forelse($salesReturns as $salesReturn)
+            @if(optional($salesReturn->sale->room)->room_type === 'shops')
+                @php
+                    $room = $salesReturn->sale->room;
+                    $totalSqft += $room->build_up_area ?? 0;
+                    $totalSaleAmount += $salesReturn->sale->sale_amount ?? 0;
+                @endphp
+                <tr>
+                    <td>{{ $room->room_type ?? '-' }}</td>
+                    <td>{{ $room->room_number ?? '-' }}</td>
+                    <td>{{ $room->room_floor ?? '-' }}</td>
+                    <td>{{ number_format($room->build_up_area ?? 0) }}</td>
+                    <td>{{ number_format($salesReturn->sale->sale_amount ?? 0) }}</td>
+                    <td>{{ number_format(($room->build_up_area ?? 0) * ($salesReturn->sale->sale_amount ?? 0), 2) }}</td>
+                    <td>{{ $salesReturn->sale->customer_name ?? '-' }}</td>
+                    <td>{{ $salesReturn->sale->status ?? '-' }}</td>
+                </tr>
+            @endif
+        @empty
             <tr>
-                <th>TYPE</th>
-                <th>SHOP NO</th>
-                <th>FLOOR</th>
-                <th>SQFT</th>
-                <th>SALES PRICE</th>
-                <th>TOTAL SALE AMOUNT</th>
-                <th>CLIENT NAME</th>
-                <th>STATUS</th>
+                <td colspan="8">No commercial details available.</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>SHOP</td>
-                <td>1</td>
-                <td>Ground</td>
-                <td>4,943</td>
-                <td>11,500</td>
-                <td>5,68,44,500</td>
-                <td>koval Ahmed Haji</td>
-                <td>Paid</td>
-            </tr>
-            <tr>
-                <td>SHOP</td>
-                <td>310</td>
-                <td>Ground</td>
-                <td>310</td>
-                <td>11,500</td>
-                <td>35,65,000</td>
-                <td>koval Ahmed Haji</td>
-                <td>Paid</td>
-            </tr>
-            <tr>
-                <td>SHOP</td>
-                <td>12</td>
-                <td>1st Floor</td>
-                <td>254</td>
-                <td>11,900</td>
-                <td>30,22,600</td>
-                <td>Vinod DYSP</td>
-                <td>Payable</td>
-            </tr>
-            <tr>
-                <td>SHOP</td>
-                <td>5</td>
-                <td>2nd Floor</td>
-                <td>430</td>
-                <td>5,500</td>
-                <td>23,65,000</td>
-                <td>Govardan Group</td>
-                <td>Payable</td>
-            </tr>
+        @endforelse
+        @if($totalSqft > 0 && $totalSaleAmount > 0)
             <tr class="total-row">
                 <td colspan="3">Total</td>
-                <td>5,937</td>
+                <td>{{ number_format($totalSqft) }}</td>
                 <td></td>
-                <td>6,57,97,100</td>
+                <td>{{ number_format($totalSaleAmount) }}</td>
                 <td></td>
                 <td></td>
             </tr>
-        </tbody>
-    </table>
+        @endif
+    </tbody>
+</table>
+
 </div>
 @endsection

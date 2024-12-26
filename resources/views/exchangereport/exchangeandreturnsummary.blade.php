@@ -18,7 +18,7 @@
             padding: 8px;
         }
         th {
-            background-color: #00838F; /* Header background */
+            background-color: #00838F;
             color: white;
         }
         tr:nth-child(even) {
@@ -58,37 +58,25 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>koval Ahmed Haji</td>
-                <td>GROUND</td>
-                <td>2</td>
-                <td>SHOP</td>
-                <td>55,20,000</td>
-            </tr>
-            <tr>
-                <td>Govardan Group</td>
-                <td>2nd</td>
-                <td>5</td>
-                <td>SHOP</td>
-                <td>23,65,000</td>
-            </tr>
-            <tr>
-                <td>koval Ahmed Haji</td>
-                <td>GROUND</td>
-                <td>1</td>
-                <td>SHOP</td>
-                <td>5,68,44,500</td>
-            </tr>
-            <tr>
-                <td>Vinod DYSP</td>
-                <td>1st</td>
-                <td>12</td>
-                <td>SHOP</td>
-                <td>30,22,600</td>
-            </tr>
+            @php $grandTotal = 0; @endphp
+            @foreach($saleReturns as $saleReturn)
+                @php
+                    $sale = $saleReturn->sale;
+                    $room = $sale ? $sale->room : null;
+                    $totalSaleAmount = $saleReturn->total_sale_amount ?? 0;
+                    $grandTotal += $totalSaleAmount;
+                @endphp
+                <tr>
+                    <td>{{ $sale->customer_name ?? 'N/A' }}</td>
+                    <td>{{ $room->room_floor ?? 'N/A' }}</td>
+                    <td>{{ $room->room_number ?? 'N/A' }}</td>
+                    <td>{{ $room->room_type ?? 'N/A' }}</td>
+                    <td>{{ number_format($totalSaleAmount, 2) }}</td>
+                </tr>
+            @endforeach
             <tr class="total-row">
                 <td colspan="4">Total</td>
-                <td>8,48,23,700</td>
+                <td>{{ number_format($grandTotal, 2) }}</td>
             </tr>
         </tbody>
     </table>
@@ -106,33 +94,43 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>koval Ahmed Haji</td>
-                <td>1st</td>
-                <td>1</td>
-                <td>SHOP</td>
-                <td>1,12,24,000</td>
-            </tr>
-            <tr>
-                <td>Govardan Group</td>
-                <td>2nd</td>
-                <td>6</td>
-                <td>SHOP</td>
-                <td>14,85,000</td>
-            </tr>
+            @php 
+                $totalSaleAmount = 0; 
+                $totalExchangedAmount = 0;
+            @endphp
+            @foreach($exchangeSales as $sale)
+                @php
+                    $exchangedSale = $sale->exchangedSale;
+                    $exchangeAmount = $exchangedSale ? $exchangedSale->exchange_build_up_area * $exchangedSale->exchange_sale_amount : 0;
+                    $totalSaleAmount += $sale->build_up_area * $sale->sale_amount;
+                    $totalExchangedAmount += $exchangeAmount;
+                @endphp
+                <tr>
+                    <td>{{ $exchangedSale->exchange_customer_name ?? 'No Exchange' }}</td>
+                    <td>{{ $exchangedSale->exchange_room_floor ?? 'N/A' }}</td>
+                    <td>{{ $exchangedSale->exchange_room_number ?? 'N/A' }}</td>
+                    <td>{{ $exchangedSale->exchange_room_type ?? 'N/A' }}</td>
+                    <td>{{ number_format($exchangeAmount, 2) }}</td>
+                </tr>
+            @endforeach
             <tr class="total-row">
                 <td colspan="4">Total</td>
-                <td>1,27,09,000</td>
+                <td>{{ number_format($totalExchangedAmount, 2) }}</td>
             </tr>
         </tbody>
     </table>
 
-    <!-- PAYABLE / RECEIVABLE SECTION -->
-    <p style="text-align: center; font-weight: bold; margin-top: 20px;">
-        Payable/Receivable: <span class="negative-amount">(7,21,14,700)</span>
-    </p>
-    <p class="note" style="text-align: center;">
-        Note: Negative indicates payable
-    </p>
+  <!-- PAYABLE / RECEIVABLE SECTION -->
+@php
+    $payableReceivable = $totalSaleAmount - $totalExchangedAmount; 
+@endphp
+<p style="text-align: center; font-weight: bold; margin-top: 20px;">
+    Payable/Receivable: 
+    <span class="{{ $payableReceivable < 0 ? 'negative-amount' : 'positive-amount' }}">
+        ({{ number_format($payableReceivable, 2) }})
+    </span>
+</p>
+
+   
 </div>
 @endsection

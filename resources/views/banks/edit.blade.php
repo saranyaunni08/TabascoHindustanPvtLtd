@@ -22,6 +22,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="account_number">Account Holder Name</label>
+                    <input type="text" class="form-control" id="account_holder_name" name="account_holder_name" value="{{ old('account_holder_name', $bank->account_holder_name) }}" required>
+                </div>
+
+                <div class="form-group">
                     <label for="ifsc_code">IFSC Code</label>
                     <input type="text" class="form-control" id="ifsc_code" name="ifsc_code" value="{{ old('ifsc_code', $bank->ifsc_code) }}" required>
                 </div>

@@ -72,7 +72,7 @@
             @foreach ($parkingSalesData as $sale)
             <tr>
                 <td>{{ $sale->floor_number }}</td>
-                <td>{{ $sale->slot_number }}</td>
+                <td>{{ $sale->parking_id }}</td>
                 <td>{{ number_format($sale->sale_amount) }}</td>
                 <td>{{ $sale->purchaser_name }}</td>
             </tr>
@@ -80,7 +80,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2" style="font-weight: bold;">TOTAL</td>
+                <td colspan="1S" style="font-weight: bold;">TOTAL</td>
+                <td>{{ number_format($totalparkingnumber)}}</td>
                 <td>{{ number_format($totalParkingSales) }}</td>
                 <td></td>
             </tr>
