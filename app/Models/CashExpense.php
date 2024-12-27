@@ -18,6 +18,8 @@ class CashExpense extends Model
         'cash_expense_description', // Make sure this matches the column name
         'cash_expense_percentage',   // Make sure this matches the column name
         'cash_expense_amount',       // Make sure this matches the column name
+        'bank_name',
+        'account_holder_name',
     ];
     
 
