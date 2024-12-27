@@ -44,23 +44,36 @@
                 <td>{{ ucfirst($installment->status) }}</td>
                 <td>
                     @if ($installment->status !== 'Paid')
-                        <form id="payment-form-{{ $installment->id }}" action="{{ route('admin.cashInstallments.markPayment', ['sale' => $sale->id]) }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="installment_id" value="{{ $installment->id }}">
-                            
-                            <div class="form-group">
-                                <label for="paid_amount_{{ $installment->id }}">Enter Paid Amount</label>
-                                <input type="number" id="paid_amount_{{ $installment->id }}" name="paid_amount" class="form-control" step="0.01" required>
-                            
-                            </div>
-                        
-                            <div class="form-group">
-                                <label for="payment_date_{{ $installment->id }}">Payment Date</label>
-                                <input type="date" id="payment_date_{{ $installment->id }}" name="payment_date" class="form-control" required>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary">Submit Payment</button>
-                        </form>
+                    <form id="payment-form-{{ $installment->id }}" action="{{ route('admin.cashInstallments.markPayment', ['sale' => $sale->id]) }}" method="POST">
+                      @csrf
+                      <input type="hidden" name="installment_id" value="{{ $installment->id }}">
+                  
+                      <div class="form-group">
+                          <label for="paid_amount_{{ $installment->id }}">Enter Paid Amount</label>
+                          <input type="number" id="paid_amount_{{ $installment->id }}" name="paid_amount" class="form-control" step="0.01" required>
+                      </div>
+                  
+                      <div class="form-group">
+                          <label for="payment_date_{{ $installment->id }}">Payment Date</label>
+                          <input type="date" id="payment_date_{{ $installment->id }}" name="payment_date" class="form-control" required>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="bank_id_{{ $installment->id }}">Select Bank</label>
+                        <select id="bank_id_{{ $installment->id }}" name="bank_id" class="form-control" required>
+                            <option value="" disabled selected>Select Bank</option>
+                            @foreach ($banks as $bank)
+                                <option value="{{ $bank->id }}">
+                                    {{ $bank->name }} ({{ $bank->account_holder_name }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                  
+                      <button type="submit" class="btn btn-primary">Submit Payment</button>
+                  </form>
+                  
                     @else
                         <span class="text-success">Fully Paid</span>
                     @endif

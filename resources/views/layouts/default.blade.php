@@ -93,7 +93,19 @@
             <span class="nav-link-text ms-1">Create Room Type</span>
         </a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-white {{ $page == 'add-bank' ? 'active bg-gradient-info' : '' }}" 
+           href="{{ route('admin.banks.create') }}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">add_business</i> <!-- Icon for adding a new bank -->
+            </div>
+            <span class="nav-link-text ms-1">Add Bank</span>
+        </a>
+    </li>
+    
       
+
       
 
         @if(isset($rooms))
@@ -272,6 +284,23 @@
   </a>
 </li> --}}
 
+
+
+<!-- Accounts Payable Link -->
+{{-- <li class="nav-item {{ $page == 'accounts-payable' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.Accountspayable.statementall', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">payment</i> <!-- Icon for accounts payable -->
+    <span class="nav-link-text ms-1">Accounts Payable</span>
+  </a>
+</li> --}}
+
+<!-- Bank Account Link -->
+<li class="nav-item {{ $page == 'bank-account' ? 'active bg-gradient-info' : '' }}">
+  <a class="nav-link" href="{{ route('admin.bankaccount.bank_account', ['building_id' => $building->id]) }}">
+    <i class="material-icons opacity-10">account_balance</i> <!-- Icon for bank account -->
+    <span class="nav-link-text ms-1">Bank Account</span>
+  </a>
+</li>
         @endif 
 
         

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PartnerDistribution extends Model
 {
-    protected $fillable = ['sale_id', 'partner_id', 'percentage', 'amount'];
+    protected $fillable = ['sale_id', 'partner_id', 'percentage', 'amount','bank_id'];
 
     public function sale()
     {

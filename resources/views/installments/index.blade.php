@@ -55,6 +55,18 @@
                   <input type="date" name="payment_date" class="form-control" required>
                 </div>
 
+                <div class="form-group">
+                  <label for="bank_id">Select Bank:</label>
+                  <select id="bank_id" name="bank_id" class="form-control" required>
+                      <option value="">-- Select Bank --</option>
+                      @foreach ($banks as $bank)
+                          <option value="{{ $bank->id }}">
+                              {{ $bank->name }} ({{ $bank->account_holder_name }})
+                          </option>
+                      @endforeach
+                  </select>
+              </div>
+              
                 <button type="submit" class="btn btn-success">Record Payment</button>
               </form>
               @else

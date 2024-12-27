@@ -9,6 +9,7 @@ use App\Models\CashInstallment;
 use App\Models\InstallmentPayment;
 use App\Models\CashInstallmentPayment;
 use App\Models\Sale;
+use App\Models\Banks;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
@@ -18,55 +19,65 @@ class InstallmentController extends Controller
     public function show($saleId)
 {
     $sale = Sale::with('installments')->findOrFail($saleId);
+    $banks = Banks::all(); // Fetch all banks
+
     $page ="installment";
     $title ="installment";
     
-    return view('installments.index', compact('sale','title','page'));
+    return view('installments.index', compact('sale','title','page','banks'));
 }
 
     // Mark an installment as paid
     public function markPayment(Request $request)
-{
-    $validatedData = $request->validate([
-        'installment_id' => 'required|integer',
-        'paid_amount' => 'required|numeric|min:0',
-        'payment_date' => 'required|date',
-    ]);
-
-    // Find the installment
-    $installment = Installment::findOrFail($validatedData['installment_id']);
-
-    // Record the payment in the installment_payments table
-    $payment = new InstallmentPayment();
-    $payment->installment_id = $installment->id;
-    $payment->paid_amount = $validatedData['paid_amount'];
-    $payment->payment_date = $validatedData['payment_date'];
-    $payment->save();
-
-    // Update the total paid amount for the installment
-    $installment->total_paid += $validatedData['paid_amount'];
-
-    // Update status based on total paid amount
-    if ($installment->total_paid >= $installment->installment_amount) {
-        $installment->status = 'Paid';
-    } else {
-        $installment->status = 'Partially Paid';
+    {
+        $validatedData = $request->validate([
+            'installment_id' => 'required|integer',
+            'paid_amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+            'bank_id' => 'required|exists:banks,id', // Validate the bank selection
+        ]);
+    
+        // Find the installment
+        $installment = Installment::findOrFail($validatedData['installment_id']);
+    
+        // Fetch the bank details
+        $bank = Banks::findOrFail($validatedData['bank_id']);
+    
+        // Record the payment in the installment_payments table
+        $payment = new InstallmentPayment();
+        $payment->installment_id = $installment->id;
+        $payment->paid_amount = $validatedData['paid_amount'];
+        $payment->payment_date = $validatedData['payment_date'];
+        $payment->bank_name = $bank->name; // Store bank name
+        $payment->account_holder_name = $bank->account_holder_name; // Store account holder name
+        $payment->save();
+    
+        // Update the total paid amount for the installment
+        $installment->total_paid += $validatedData['paid_amount'];
+    
+        // Update status based on total paid amount
+        if ($installment->total_paid >= $installment->installment_amount) {
+            $installment->status = 'Paid';
+        } else {
+            $installment->status = 'Partially Paid';
+        }
+    
+        $installment->save();
+    
+        return back()->with('success', 'Payment recorded successfully.');
     }
-
-    $installment->save();
-
-    return back()->with('success', 'Payment recorded successfully.');
-}
+    
 public function showCashInstallments($saleId)
 {
     // Fetch the sale and its associated cash installments
     $sale = Sale::with('cashInstallments')->findOrFail($saleId);
+    $banks = Banks::all(); // Assuming the Bank model is set up
 
     // Page and title for the view
     $page = "cash_installment";
     $title = "Cash Installment";
 
-    return view('cash_installments.show', compact('sale', 'title', 'page'));
+    return view('cash_installments.show', compact('sale', 'title', 'page','banks'));
 }
 public function cashMarkPayment(Request $request, $sale)
 {
@@ -75,6 +86,7 @@ public function cashMarkPayment(Request $request, $sale)
         'installment_id' => 'required|exists:cash_installments,id',
         'paid_amount' => 'required|numeric|min:0',
         'payment_date' => 'required|date',
+        'bank_id' => 'required|exists:banks,id', // Ensure the bank exists
     ]);
 
     // Retrieve the specific installment
@@ -90,11 +102,16 @@ public function cashMarkPayment(Request $request, $sale)
         ]);
     }
 
+    // Retrieve the selected bank details
+    $bank = Banks::findOrFail($validatedData['bank_id']);
+
     // Record the payment
     $payment = new CashInstallmentPayment();
     $payment->cash_installment_id = $installment->id;
     $payment->paid_amount = $validatedData['paid_amount'];
     $payment->payment_date = $validatedData['payment_date'];
+    $payment->bank_name = $bank->name; // Save the bank name
+    $payment->account_holder_name = $bank->account_holder_name; // Save the account holder's name
     $payment->save();
 
     // Update the total paid amount for the cash installment
@@ -111,6 +128,7 @@ public function cashMarkPayment(Request $request, $sale)
 
     return back()->with('success', 'Payment recorded successfully.');
 }
+
 
 
 public function downloadPdf($saleId)

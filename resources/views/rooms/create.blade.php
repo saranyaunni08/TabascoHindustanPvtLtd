@@ -89,11 +89,8 @@
                                         <input type="text" name="space_name" class="form-control" style="text-transform: uppercase;">
                                         
                                         <label for="space_type" class="form-label mt-3">Space Type</label>
-                                        <select name="space_type" class="form-select" style="text-transform: uppercase;">
-                                            <option value="" disabled selected>Select Space Type</option>
-                                            <option value="Massage Chair">Massage Chair Space</option>
-                                            <option value="Table Space">Table Space</option>
-                                        </select>
+                                        <input type="text" name="space_type" class="form-select" style="text-transform: uppercase;">
+                                      
                                         
                                         <label for="space_area" class="form-label mt-3">Space Area (sq ft)</label>
                                         <input type="text" name="space_area" class="form-control" style="text-transform: uppercase;">
@@ -126,12 +123,8 @@
                                             <input type="text" name="chair_name" class="form-control" style="text-transform: uppercase;">
                                             
                                             <label for="chair_type" class="form-label mt-3">Chair Type</label>
-                                            <select name="chair_type" class="form-select" style="text-transform: uppercase;">
-                                                <option value="" disabled selected>Select Chair Type</option>
-                                                <option value="Executive Chair">Executive Chair</option>
-                                                <option value="Recliner Chair">Recliner Chair</option>
-                                            </select>
-                                            
+                                            <input type="text" name="chair_type" class="form-control" style="text-transform: uppercase;">
+                                                
                                             <label for="chair_space_in_sq" class="form-label mt-3">Chair Space (sq ft)</label>
                                             <input type="text" name="chair_space_in_sq" class="form-control" style="text-transform: uppercase;">
                                             <div id="chairSpaceError" style="color: red;"></div>

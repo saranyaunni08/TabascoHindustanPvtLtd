@@ -18,6 +18,8 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\StatementController;
 use App\Http\Controllers\InstallmentController;
+use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\BankController;
 
 
 
@@ -277,6 +279,26 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('/sales/{sale}/returns', [SaleController::class, 'storeReturns'])->name('sales.returns.store');
         Route::post('/sales/{sale}/chequereturns', [SaleController::class, 'storechequeReturns'])->name('sales.chequereturns.store');
         Route::post('/sales/{sale}/add-cheque-deduction', [SaleController::class, 'addChequeDeduction'])->name('sales.addChequeDeduction');
+
+// bank
+
+        Route::get('/bank-account/bank_account/{building_id}', [BankAccountController::class, 'bankaccount'])->name('bankaccount.bank_account');
+        Route::get('/bankaccount.bank_axisbankaccount/{building_id}', [BankAccountController::class, 'axisbank'])->name('bankaccount.axisbankaccount');
+        Route::get('/bankaccount/canarabankaccount/{building_id}', [BankAccountController::class, 'canarabank'])->name('bankaccount.canarabankaccount');
+        Route::get('/bankaccount/sbiaccount/{building_id}', [BankAccountController::class, 'sbi'])->name('bankaccount.sbiaccount');
+
+        Route::get('/banks/create', [BankController::class, 'create'])->name('banks.create');
+
+        Route::post('/banks/store', [BankController::class, 'store'])->name('banks.store');
+
+        Route::get('/banks/views', [BankController::class, 'views'])->name('banks.views');
+
+        // Define a route for editing a specific bank
+        Route::get('/banks/edit/{id}', [BankController::class, 'edit'])->name('banks.edit');
+
+        Route::delete('/banks/{bank}', [BankController::class, 'destroy'])->name('banks.destroy');
+
+        Route::put('/banks/{id}', [BankController::class, 'update'])->name('banks.update');
 
 
         });

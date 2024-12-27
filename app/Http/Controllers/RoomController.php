@@ -11,6 +11,7 @@ use App\Models\Installment;
 use App\Models\partner;
 use App\Models\RoomType;
 use App\Models\Parking;
+use App\Models\Banks;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -586,6 +587,7 @@ class RoomController extends Controller
         $availableFloors = Parking::where('status', 'available')
         ->distinct()
         ->pluck('floor_number');
+        $banks = Banks::all();
 
         // Fetch all available parking slots
          $availableParkings = Parking::where('status', 'available')
@@ -599,6 +601,7 @@ class RoomController extends Controller
             'partners' => $partners, // Remove quotes around $partners
             'availableFloors' => $availableFloors,
             'availableParkings' => $availableParkings,
+            'banks' => $banks,
         ]);
     }
 

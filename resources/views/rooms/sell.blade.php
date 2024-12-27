@@ -193,7 +193,7 @@
         
         <div class="form-group">
             <label for="partner_distribution">Select Partners</label>
-            <!-- Your partner selection checkboxes -->
+            <!-- Partner selection checkboxes -->
             @foreach($partners as $partner)
             <div class="form-check">
                 <input class="form-check-input partner-checkbox" type="checkbox" value="{{ $partner->id }}" id="partner_{{ $partner->id }}" onchange="togglePartnerFields({{ $partner->id }})">
@@ -210,17 +210,17 @@
                 </div>
             @endif
         </div>
-
+        
         <div id="partner_distribution_container"></div>
-    
+        
+        <!-- Hidden inputs for storing data -->
         <input type="hidden" name="partner_distribution" id="partner_distribution" value="">
         <input type="hidden" name="partner_percentages" id="partner_percentages" value="">
         <input type="hidden" name="partner_amounts" id="partner_amounts" value="">
-    
+        <input type="hidden" name="partner_banks" id="partner_banks" value="">
         
-
         <div id="total_percentage_error" style="color:red;"></div>
-
+        
 
         
         <div id="additional-expenses-container">
@@ -666,54 +666,80 @@ document.getElementById('no_of_installments_cash').addEventListener('input', cal
 <script>
    // Function to show or hide partner fields based on checkbox selection
    function togglePartnerFields(partnerId) {
-    let container = document.getElementById('partner_distribution_container');
-    let checkbox = document.getElementById('partner_' + partnerId);
+    const container = document.getElementById('partner_distribution_container');
+    const checkbox = document.getElementById('partner_' + partnerId);
     
     if (checkbox.checked) {
-        let partnerDiv = document.createElement('div');
+        const partnerDiv = document.createElement('div');
         partnerDiv.className = 'partner-field';
         partnerDiv.id = 'partner_field_' + partnerId;
+        
+        // Generate the partner fields HTML
         partnerDiv.innerHTML = `
             <h5>Partner: ${document.querySelector('label[for="partner_' + partnerId + '"]').textContent}</h5>
+
+            <!-- Percentage Input -->
             <div class="form-group">
                 <label for="partner_${partnerId}_percentage">Percentage</label>
                 <input type="number" class="form-control partner-percentage" data-partner-id="${partnerId}" id="partner_${partnerId}_percentage" min="0" max="100" oninput="updatePartnerAmount(${partnerId}); validateTotalPercentage(); updateHiddenFields();">
             </div>
+
+            <!-- Amount Input -->
             <div class="form-group">
                 <label for="partner_${partnerId}_amount">Amount</label>
                 <input type="number" class="form-control partner-amount" data-partner-id="${partnerId}" id="partner_${partnerId}_amount" oninput="updatePartnerPercentage(${partnerId}); validateTotalPercentage(); updateHiddenFields();">
             </div>
+
+            <!-- Bank Selection Dropdown -->
+            <div class="form-group">
+                <label for="partner_${partnerId}_bank">Select Bank</label>
+                <select class="form-control partner-bank" id="partner_${partnerId}_bank" onchange="updateHiddenFields();">
+                    <option value="">-- Select Bank --</option>
+                    <!-- Replace with actual banks data dynamically if required -->
+                    @foreach($banks as $bank)
+                        <option value="{{ $bank->id }}">{{ $bank->name }} - {{ $bank->account_number }}</option>
+                    @endforeach
+                </select>
+            </div>
         `;
+        
         container.appendChild(partnerDiv);
     } else {
-        let partnerDiv = document.getElementById('partner_field_' + partnerId);
+        const partnerDiv = document.getElementById('partner_field_' + partnerId);
         if (partnerDiv) {
             container.removeChild(partnerDiv);
         }
     }
-    updateHiddenFields();  // Ensure hidden fields are updated when toggling partners
+
+    updateHiddenFields();  // Update hidden fields when toggling partners
 }
 function updateHiddenFields() {
-    let partnerDistribution = [];
-    let partnerPercentages = [];
-    let partnerAmounts = [];
+    const partnerIds = [];
+    const percentages = [];
+    const amounts = [];
+    const banks = [];
 
-    document.querySelectorAll('.partner-checkbox:checked').forEach(function(checkbox) {
-        let partnerId = checkbox.value;
-        let percentageField = document.getElementById('partner_' + partnerId + '_percentage');
-        let amountField = document.getElementById('partner_' + partnerId + '_amount');
+    // Collect data from each partner's fields
+    document.querySelectorAll('.partner-field').forEach((partnerField) => {
+        const partnerId = partnerField.id.replace('partner_field_', '');
+        const percentage = document.getElementById(`partner_${partnerId}_percentage`).value;
+        const amount = document.getElementById(`partner_${partnerId}_amount`).value;
+        const bank = document.getElementById(`partner_${partnerId}_bank`).value;
 
-        if (percentageField && amountField) {
-            partnerDistribution.push(partnerId);
-            partnerPercentages.push(percentageField.value);
-            partnerAmounts.push(amountField.value);
-        }
+        partnerIds.push(partnerId);
+        percentages.push(percentage);
+        amounts.push(amount);
+        banks.push(bank);
     });
 
-    document.getElementById('partner_distribution').value = JSON.stringify(partnerDistribution);
-    document.getElementById('partner_percentages').value = JSON.stringify(partnerPercentages);
-    document.getElementById('partner_amounts').value = JSON.stringify(partnerAmounts);
+    // Update the hidden input fields with the collected data
+    document.getElementById('partner_distribution').value = partnerIds.join(',');
+    document.getElementById('partner_percentages').value = percentages.join(',');
+    document.getElementById('partner_amounts').value = amounts.join(',');
+    document.getElementById('partner_banks').value = banks.join(',');
 }
+
+
 
 
 document.querySelector('form').addEventListener('submit', function(event) {
