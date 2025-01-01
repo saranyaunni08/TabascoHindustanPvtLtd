@@ -9,7 +9,7 @@ class InstallmentPayment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['installment_id', 'paid_amount', 'payment_date'];
+    protected $fillable = ['installment_id', 'paid_amount', 'payment_date', 'cheque_number'];
 
     // Define the relationship to Installment
     public function installment()

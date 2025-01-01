@@ -34,16 +34,15 @@ class SaleController extends Controller
     {
         DB::beginTransaction(); // Start the database transaction
 
-        dd($request->all());
+        // dd($request->all());
         // Decode JSON strings into arrays
     try {
         $request->merge([
             'partner_distribution' => json_decode($request->partner_distribution, true),
             'partner_percentages' => json_decode($request->partner_percentages, true),
             'partner_amounts' => json_decode($request->partner_amounts, true),
-            'partner_bank_ids' => json_decode($request->partner_bank_ids, true),
         ]);
-
+    
         // Validate the incoming request data
         $validatedData = $request->validate([
             'room_id' => 'required|exists:rooms,id',
@@ -122,13 +121,9 @@ class SaleController extends Controller
 
             'land_description' => 'nullable|string|max:1000',
             'land_amount' => 'nullable|numeric|min:0', // Validation for land amount
-            'partner_bank_ids.*' => 'exists:banks,id',
-            'partner_bank_ids' => 'required|array',
 
 
         ]);
-
-        
     
         // Update the room status
         $room = Room::find($request->room_id);
@@ -168,8 +163,6 @@ class SaleController extends Controller
                 'partner_id' => $partnerId,
                 'percentage' => $request->partner_percentages[$index] ?? 0,
                 'amount' => $request->partner_amounts[$index] ?? 0,
-                'bank_id' => $request->partner_bank_ids[$index] ?? null,
-
             ]);
         }
     

@@ -66,6 +66,12 @@
                       @endforeach
                   </select>
               </div>
+
+              <div class="mb-3">
+                <label for="cheque_number_{{ $installment->id }}" class="form-label">Cheque Number (Optional):</label>
+                <input type="text" name="cheque_number" id="cheque_number_{{ $installment->id }}" class="form-control" placeholder="Enter cheque number (if applicable)">
+              </div>
+              
               
                 <button type="submit" class="btn btn-success">Record Payment</button>
               </form>

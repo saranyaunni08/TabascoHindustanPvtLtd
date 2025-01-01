@@ -34,6 +34,26 @@
 
   
     <title>{{ $title }}</title>
+
+    <style>
+      /* Custom dropdown background and text */
+.dropdown-menu {
+    background-color: #000 !important; /* Black background */
+    color: white !important; /* White text */
+}
+
+/* Active dropdown item style */
+.dropdown-item.active {
+    background-color: #0d6efd !important; /* Adjust this color for active item */
+}
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+    background-color: #555 !important; /* Darker background on hover */
+    color: white !important; /* Ensure text stays white */
+}
+
+    </style>
     
   </head>
 <body class="g-sidenav-show bg-gray-200">
@@ -110,74 +130,72 @@
 
         @if(isset($rooms))
       
-        <!-- Single Rooms entry outside the loop -->
-      <li class="nav-item">
-        <a class="nav-link text-white {{ $page == 'rooms' ? 'active bg-gradient-info' : '' }}"
-          href="{{ route('admin.rooms.index', ['building_id' => $building->id]) }}">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">location_city</i>
-            </div>
-            <span class="nav-link-text ms-1" style="text-transform: capitalize">Rooms</span>
-        </a>
-      </li>
-
-    <li class="nav-item">
-      <a class="nav-link text-white {{ $page == 'flats' ? 'active bg-gradient-info' : '' }}"
-        href="{{ route('admin.flats.index', ['building_id' => $building->id]) }}">
-          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">apartment</i>
-          </div>
-          <span class="nav-link-text ms-1">Flats</span>
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link text-white {{ $page == 'shops' ? 'active bg-gradient-info' : '' }}"
-        href="{{ route('admin.shops.index', ['building_id' => $building->id]) }}">
-          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">store</i>
-          </div>
-          <span class="nav-link-text ms-1">Shops</span>
-      </a>
-    </li>
-
-      <li class="nav-item">
-          <a class="nav-link text-white {{ $page == 'table-spaces' ? 'active bg-gradient-info' : '' }}"
-             href="{{ route('admin.table-spaces.index', ['building_id' => $building->id ?? 0]) }}">
+        <li class="nav-item dropdown">
+          <a class="nav-link text-white {{ $page == 'rooms' ? 'active bg-gradient-info' : '' }} dropdown-toggle" 
+             href="#" id="roomsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i class="material-icons opacity-10">table_chart</i>
+                  <i class="material-icons opacity-10">location_city</i>
               </div>
-              <span class="nav-link-text ms-1">Table Spaces</span>
+              <span class="nav-link-text ms-1" style="text-transform: capitalize">Rooms</span>
           </a>
+          <ul class="dropdown-menu bg-dark text-white" aria-labelledby="roomsDropdown">
+              <li>
+                  <a class="dropdown-item text-white {{ $page == 'flats' ? 'active bg-gradient-info' : '' }}" 
+                     href="{{ route('admin.flats.index', ['building_id' => $building->id]) }}">
+                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                          <i class="material-icons opacity-10">apartment</i>
+                      </div>
+                      Flats
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item text-white {{ $page == 'shops' ? 'active bg-gradient-info' : '' }}" 
+                     href="{{ route('admin.shops.index', ['building_id' => $building->id]) }}">
+                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                          <i class="material-icons opacity-10">store</i>
+                      </div>
+                      Shops
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item text-white {{ $page == 'table-spaces' ? 'active bg-gradient-info' : '' }}" 
+                     href="{{ route('admin.table-spaces.index', ['building_id' => $building->id ?? 0]) }}">
+                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                          <i class="material-icons opacity-10">table_chart</i>
+                      </div>
+                      Table Spaces
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item text-white {{ $page == 'Kiosks' ? 'active bg-gradient-info' : '' }}" 
+                     href="{{ route('admin.kiosks.index', ['building_id' => $building->id ?? 0]) }}">
+                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                          <i class="material-icons opacity-10">storefront</i>
+                      </div>
+                      Kiosks
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item text-white {{ $page == 'chair-spaces' ? 'active bg-gradient-info' : '' }}" 
+                     href="{{ route('admin.chair-spaces.index', ['building_id' => $building->id ?? 0]) }}">
+                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                          <i class="material-icons opacity-10">event_seat</i>
+                      </div>
+                      Chair Spaces
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item text-white {{ $page == 'custom-rooms' ? 'active bg-gradient-info' : '' }}" 
+                     href="{{ route('admin.custom_rooms', ['building_id' => $building->id]) }}">
+                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                          <i class="material-icons opacity-10">room_service</i>
+                      </div>
+                      Custom Rooms
+                  </a>
+              </li>
+          </ul>
       </li>
-      <li class="nav-item">
-          <a class="nav-link text-white {{ $page == 'Kiosks' ? 'active bg-gradient-info' : '' }}"
-             href="{{ route('admin.kiosks.index', ['building_id' => $building->id ?? 0]) }}">
-              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">storefront</i> 
-              </div>
-              <span class="nav-link-text ms-1">Kiosks</span>
-          </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-white {{ $page == 'chair-spaces' ? 'active bg-gradient-info' : '' }}"
-           href="{{ route('admin.chair-spaces.index', ['building_id' => $building->id ?? 0]) }}">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">event_seat</i>
-            </div>
-            <span class="nav-link-text ms-1">Chair Spaces</span>
-        </a>
-      </li>
-
-      <li class="nav-item {{ $page == 'custom-rooms' ? 'active bg-gradient-info' : '' }}">
-        <a class="nav-link text-white" href="{{ route('admin.custom_rooms', ['building_id' => $building->id]) }}">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">room_service</i>
-            </div>
-            <span class="nav-link-text ms-1">Custom Rooms</span>
-        </a>
-    </li>
-
+      
       <li class="nav-item {{ $page == 'customer' ? 'active bg-gradient-info' : '' }}">
         @if(isset($sale))
         <a class="nav-link text-white" href="{{ route('admin.customers.show', ['saleId' => $sale->id]) }}">

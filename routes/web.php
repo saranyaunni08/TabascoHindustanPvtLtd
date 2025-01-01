@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
@@ -20,10 +19,6 @@ use App\Http\Controllers\StatementController;
 use App\Http\Controllers\InstallmentController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\BankController;
-
-
-
-
 
 
 

@@ -34,7 +34,8 @@ class InstallmentController extends Controller
             'installment_id' => 'required|integer',
             'paid_amount' => 'required|numeric|min:0',
             'payment_date' => 'required|date',
-            'bank_id' => 'required|exists:banks,id', // Validate the bank selection
+            'bank_id' => 'required|exists:banks,id',
+            'cheque_number' => 'nullable|string', // Validate cheque_number as nullable string
         ]);
     
         // Find the installment
@@ -48,8 +49,9 @@ class InstallmentController extends Controller
         $payment->installment_id = $installment->id;
         $payment->paid_amount = $validatedData['paid_amount'];
         $payment->payment_date = $validatedData['payment_date'];
-        $payment->bank_name = $bank->name; // Store bank name
-        $payment->account_holder_name = $bank->account_holder_name; // Store account holder name
+        $payment->bank_name = $bank->name;
+        $payment->account_holder_name = $bank->account_holder_name;
+        $payment->cheque_number = $validatedData['cheque_number']; // Store cheque number
         $payment->save();
     
         // Update the total paid amount for the installment
@@ -66,6 +68,7 @@ class InstallmentController extends Controller
     
         return back()->with('success', 'Payment recorded successfully.');
     }
+    
     
 public function showCashInstallments($saleId)
 {

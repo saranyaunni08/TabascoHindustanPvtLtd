@@ -1,7 +1,19 @@
 @extends('layouts.default')
+<script>
+    body {
+    padding-left: 250px;  /* Adjust this value based on your side nav width */
+}
 
+.container {
+    margin-left: 20px; /* Optional: To ensure the form doesn't touch the left edge */
+}
+button.btn-danger {
+    margin-top: 40px !important; /* Adjust this value if necessary */
+}
+
+</script>
 @section('content')
-<div class="container"><br><br>
+<div class="container">
     <h2>Sell Room</h2>
     <form action="{{ route('admin.sales.store') }}" method="POST">
         @csrf
@@ -22,90 +34,126 @@
 
         <!-- Customer Name -->
         <div class="form-group">
-            <label class="font-weight-bold" for="customer_name">Customer Name</label>
-            <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label class="font-weight-bold" for="customer_name">Customer Name</label>
+                    <input type="text" id="customer_name" name="customer_name" required class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="font-weight-bold" for="customer_email">Customer Email</label>
+                    <input type="email" id="customer_email" name="customer_email" required class="form-control">
+                </div>
+            </div>
         </div>
-
-        <!-- Customer Email -->
-        <div class="form-group">
-            <label class="font-weight-bold" for="customer_email">Customer Email</label>
-            <input type="email" class="form-control" id="customer_email" name="customer_email" required>
-        </div>
+        
+       
 
         <!-- Customer Contact -->
         <div class="form-group">
-            <label class="font-weight-bold" for="customer_contact">Customer Contact</label>
-            <input type="text" class="form-control" id="customer_contact" name="customer_contact" required>
+         
         </div>
 
-           <!-- Sale Amount -->
-           <div class="form-group">
-            <label class="font-weight-bold" for="sale_amount">Sale Amount (in sq ft)</label>
-            <input type="number" class="form-control" id="sale_amount" name="sale_amount" required>
-        </div>
-
-        <!-- Area Calculation Type -->
         <div class="form-group">
-            <label class="font-weight-bold" for="area_calculation_type">Area Calculation Type</label>
-            <select class="form-control" id="area_calculation_type" name="area_calculation_type" required>
-                <option value="" disabled selected>Select Area Type</option>
-                <option value="super_build_up_area">Super Build-Up Area</option>
-                <option value="carpet_area">Carpet Area</option>
-            </select>
+            <div class="form-row">
+                <div class="col-md-4">
+                    <label class="font-weight-bold" for="customer_contact">Customer Contact</label>
+                    <input type="text" class="form-control" id="customer_contact" name="customer_contact" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="font-weight-bold" for="sale_amount">Sale Amount (in sq ft)</label>
+                    <input type="number" class="form-control" id="sale_amount" name="sale_amount" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="font-weight-bold" for="area_calculation_type">Area Calculation Type</label>
+                    <select class="form-control" id="area_calculation_type" name="area_calculation_type" required>
+                        <option value="" disabled selected>Select Area Type</option>
+                        <option value="super_build_up_area">Super Build-Up Area</option>
+                        <option value="carpet_area">Carpet Area</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <!-- Read-only Fields for Super Build-Up and Carpet Area -->
         @if($room->room_type == 'Flat')
-            <div class="form-group">
-                <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
-                <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->flat_build_up_area }}" readonly>
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
+                    <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->flat_build_up_area }}" readonly>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="font-weight-bold" for="carpet_area">Carpet Area (sq ft)</label>
-                <input type="text" class="form-control" id="carpet_area" name="carpet_area" value="{{ $room->flat_carpet_area }}" readonly>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="carpet_area">Carpet Area (sq ft)</label>
+                    <input type="text" class="form-control" id="carpet_area" name="carpet_area" value="{{ $room->flat_carpet_area }}" readonly>
+                </div>
             </div>
-        @endif
-        @if($room->room_type == 'Shops')
-            <div class="form-group">
-                <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
-                <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->build_up_area }}" readonly>
+        </div>
+    @endif
+    
+    @if($room->room_type == 'Shops')
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
+                    <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->build_up_area }}" readonly>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="font-weight-bold" for="carpet_area">Carpet Area (sq ft)</label>
-                <input type="text" class="form-control" id="carpet_area" name="carpet_area" value="{{ $room->carpet_area }}" readonly>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="carpet_area">Carpet Area (sq ft)</label>
+                    <input type="text" class="form-control" id="carpet_area" name="carpet_area" value="{{ $room->carpet_area }}" readonly>
+                </div>
             </div>
-        @endif
-        @if($room->room_type == 'Table space')
-            <div class="form-group">
-                <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
-                <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->space_area }}" readonly>
+        </div>
+    @endif
+    
+    @if($room->room_type == 'Table space')
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
+                    <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->space_area }}" readonly>
+                </div>
             </div>
-            
-        @endif
-        @if($room->room_type == 'Chair space')
-            <div class="form-group">
-                <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
-                <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->chair_space_in_sq}}" readonly>
+        </div>
+    @endif
+    
+    @if($room->room_type == 'Chair space')
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="build_up_area">Super Build-Up Area (sq ft)</label>
+                    <input type="text" class="form-control" id="build_up_area" name="build_up_area" value="{{ $room->chair_space_in_sq }}" readonly>
+                </div>
             </div>
-            
-        @endif
+        </div>
+    @endif
+    
 
 
     <!-- Land Entry Fields (Dynamically added) -->
     <div id="landFieldsContainer">
         <!-- Dynamically added land fields will appear here -->
+    
     </div>
 
-    <!-- Button to add land details -->
-    <button type="button" id="addLandButton" class="btn btn-primary">+ Add Land</button>
 
-        <!-- Total Amount (Read-only) -->
-        <div class="form-group">
-            <label class="font-weight-bold" for="total_amount">Total Amount</label>
-            <input type="text" class="form-control" id="total_amount" name="total_amount" readonly>
+    <div class="form-group">
+        <div class="form-row">
+            <div class="col-md-6">
+                <button type="button" id="addLandButton" class="btn btn-primary">+ Add Land</button>
+
+            </div>
+            <div class="col-md-6">
+                <label class="font-weight-bold" for="total_amount">Total Amount</label>
+                <input type="text" class="form-control" id="total_amount" name="total_amount" readonly>
+            </div>
         </div>
+    </div>
 
-
+ 
         <!-- Discount Percentage -->
         <div class="form-group">
             <label class="font-weight-bold" for="discount_percentage">Discount Percentage (%)</label>
@@ -193,7 +241,7 @@
         
         <div class="form-group">
             <label for="partner_distribution">Select Partners</label>
-            <!-- Partner selection checkboxes -->
+            <!-- Your partner selection checkboxes -->
             @foreach($partners as $partner)
             <div class="form-check">
                 <input class="form-check-input partner-checkbox" type="checkbox" value="{{ $partner->id }}" id="partner_{{ $partner->id }}" onchange="togglePartnerFields({{ $partner->id }})">
@@ -210,17 +258,17 @@
                 </div>
             @endif
         </div>
-        
+
         <div id="partner_distribution_container"></div>
-        
-        <!-- Hidden inputs for storing data -->
+    
         <input type="hidden" name="partner_distribution" id="partner_distribution" value="">
         <input type="hidden" name="partner_percentages" id="partner_percentages" value="">
         <input type="hidden" name="partner_amounts" id="partner_amounts" value="">
-        <input type="hidden" name="partner_banks" id="partner_banks" value="">
+    
         
+
         <div id="total_percentage_error" style="color:red;"></div>
-        
+
 
         
         <div id="additional-expenses-container">
@@ -666,80 +714,54 @@ document.getElementById('no_of_installments_cash').addEventListener('input', cal
 <script>
    // Function to show or hide partner fields based on checkbox selection
    function togglePartnerFields(partnerId) {
-    const container = document.getElementById('partner_distribution_container');
-    const checkbox = document.getElementById('partner_' + partnerId);
+    let container = document.getElementById('partner_distribution_container');
+    let checkbox = document.getElementById('partner_' + partnerId);
     
     if (checkbox.checked) {
-        const partnerDiv = document.createElement('div');
+        let partnerDiv = document.createElement('div');
         partnerDiv.className = 'partner-field';
         partnerDiv.id = 'partner_field_' + partnerId;
-        
-        // Generate the partner fields HTML
         partnerDiv.innerHTML = `
             <h5>Partner: ${document.querySelector('label[for="partner_' + partnerId + '"]').textContent}</h5>
-
-            <!-- Percentage Input -->
             <div class="form-group">
                 <label for="partner_${partnerId}_percentage">Percentage</label>
                 <input type="number" class="form-control partner-percentage" data-partner-id="${partnerId}" id="partner_${partnerId}_percentage" min="0" max="100" oninput="updatePartnerAmount(${partnerId}); validateTotalPercentage(); updateHiddenFields();">
             </div>
-
-            <!-- Amount Input -->
             <div class="form-group">
                 <label for="partner_${partnerId}_amount">Amount</label>
                 <input type="number" class="form-control partner-amount" data-partner-id="${partnerId}" id="partner_${partnerId}_amount" oninput="updatePartnerPercentage(${partnerId}); validateTotalPercentage(); updateHiddenFields();">
             </div>
-
-            <!-- Bank Selection Dropdown -->
-            <div class="form-group">
-                <label for="partner_${partnerId}_bank">Select Bank</label>
-                <select class="form-control partner-bank" id="partner_${partnerId}_bank" onchange="updateHiddenFields();">
-                    <option value="">-- Select Bank --</option>
-                    <!-- Replace with actual banks data dynamically if required -->
-                    @foreach($banks as $bank)
-                        <option value="{{ $bank->id }}">{{ $bank->name }} - {{ $bank->account_number }}</option>
-                    @endforeach
-                </select>
-            </div>
         `;
-        
         container.appendChild(partnerDiv);
     } else {
-        const partnerDiv = document.getElementById('partner_field_' + partnerId);
+        let partnerDiv = document.getElementById('partner_field_' + partnerId);
         if (partnerDiv) {
             container.removeChild(partnerDiv);
         }
     }
-
-    updateHiddenFields();  // Update hidden fields when toggling partners
+    updateHiddenFields();  // Ensure hidden fields are updated when toggling partners
 }
 function updateHiddenFields() {
-    const partnerIds = [];
-    const percentages = [];
-    const amounts = [];
-    const banks = [];
+    let partnerDistribution = [];
+    let partnerPercentages = [];
+    let partnerAmounts = [];
 
-    // Collect data from each partner's fields
-    document.querySelectorAll('.partner-field').forEach((partnerField) => {
-        const partnerId = partnerField.id.replace('partner_field_', '');
-        const percentage = document.getElementById(`partner_${partnerId}_percentage`).value;
-        const amount = document.getElementById(`partner_${partnerId}_amount`).value;
-        const bank = document.getElementById(`partner_${partnerId}_bank`).value;
+    document.querySelectorAll('.partner-checkbox:checked').forEach(function(checkbox) {
+        let partnerId = checkbox.value;
+        let percentageField = document.getElementById('partner_' + partnerId + '_percentage');
+        let amountField = document.getElementById('partner_' + partnerId + '_amount');
 
-        partnerIds.push(partnerId);
-        percentages.push(percentage);
-        amounts.push(amount);
-        banks.push(bank);
+        if (percentageField && amountField) {
+            partnerDistribution.push(partnerId);
+            partnerPercentages.push(percentageField.value);
+            partnerAmounts.push(amountField.value);
+        }
     });
 
-    // Update the hidden input fields with the collected data
-    document.getElementById('partner_distribution').value = partnerIds.join(',');
-    document.getElementById('partner_percentages').value = percentages.join(',');
-    document.getElementById('partner_amounts').value = amounts.join(',');
-    document.getElementById('partner_banks').value = banks.join(',');
+    document.getElementById('partner_distribution').value = JSON.stringify(partnerDistribution);
+    document.getElementById('partner_percentages').value = JSON.stringify(partnerPercentages);
+    document.getElementById('partner_amounts').value = JSON.stringify(partnerAmounts);
 }
-
-
 
 
 document.querySelector('form').addEventListener('submit', function(event) {
@@ -1573,16 +1595,28 @@ console.log('Installment Amount:', installmentAmount);
         landDiv.id = `land-entry-${landCounter}`;
 
         const landHTML = `
-            <div class="form-group">
-                <label for="land_description_${landCounter}">Land Description ${landCounter}</label>
-                <input type="text" class="form-control" id="land_description_${landCounter}" name="land_description[]" placeholder="Enter land description">
-            </div>
-            <div class="form-group">
-                <label for="land_amount_${landCounter}">Land Amount</label>
-                <input type="number" class="form-control" id="land_amount_${landCounter}" name="land_amount[]" placeholder="Enter land amount" oninput="updateLandAmount(${landCounter})">
-            </div>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeLandDetail(${landCounter})">Remove</button>
-            <hr>
+<div class="form-group">
+    <div class="form-row align-items-center">
+        <div class="col-md-6">
+            <label for="land_description_${landCounter}">Land Description ${landCounter}</label>
+            <input type="text" class="form-control" id="land_description_${landCounter}" name="land_description[]" placeholder="Enter land description">
+        </div>
+        <div class="col-md-5">
+            <label for="land_amount_${landCounter}">Land Amount</label>
+            <input type="number" class="form-control" id="land_amount_${landCounter}" name="land_amount[]" placeholder="Enter land amount" oninput="updateLandAmount(${landCounter})">
+        </div>
+        <div class="d-flex justify-content-end">
+            <button 
+                type="button" 
+                class="btn btn-danger btn-sm align-self-center rounded-circle d-flex justify-content-center align-items-center" 
+                style="width: 40px; height: 40px;" 
+                onclick="removeLandDetail(${landCounter})">
+                <i class="fas fa-times"></i>
+            </button></div>
+
+    </div>
+</div>
+
         `;
         landDiv.innerHTML = landHTML;
 
