@@ -10,7 +10,7 @@ class ExtraExpensePayment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'cash_installment_id',
+        'cashinstallment_payment_id ',
         'description',
         'percentage',
         'amount',
