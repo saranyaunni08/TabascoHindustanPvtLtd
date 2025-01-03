@@ -63,6 +63,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Add Partner</button>
+        <a href="{{ route('admin.partners.list') }}" class="btn btn-secondary">View Partner List</a>
     </form>
 </div>
 @endsection

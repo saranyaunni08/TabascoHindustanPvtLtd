@@ -192,6 +192,13 @@ Route::controller(AuthController::class)->group(function () {
         //partners
         Route::get('/partners/create', [PartnerController::class, 'create'])->name('partners.create');
         Route::post('/partners', [PartnerController::class, 'store'])->name('partners.store');
+        Route::get('/partners/list', [PartnerController::class, 'listPartners'])->name('partners.list');
+        Route::get('/partners/edit/{id}', [PartnerController::class, 'edit'])->name('partners.edit');
+        Route::delete('/partners/destroy/{id}', [PartnerController::class, 'destroy'])->name('partners.destroy');
+        Route::put('/partners/update/{id}', [PartnerController::class, 'update'])->name('partners.update');
+
+
+
 
         // In routes/web.php
         Route::get('/partners/cash-in-hand', [PartnerController::class, 'cashInHand'])->name('partners.cash_in_hand');

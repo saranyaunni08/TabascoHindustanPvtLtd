@@ -142,4 +142,38 @@ class PartnerController extends Controller
 
         return redirect()->back()->with('error', 'No installments selected.');
     }
+    public function listPartners()
+    {
+        $partners = Partner::all(); // Fetch all partners from the database
+        $title = 'List of Partners';
+        $page = 'List of Partners';
+        return view('partners.list', compact('partners','title','page')); // Pass data to the view
+        
+    }
+    public function edit($id)
+{
+    $partner = Partner::findOrFail($id); // Fetch the partner using the ID
+    $title = 'List of Partners';
+        $page = 'List of Partners';
+    return view('partners.edit', compact('partner','title','page')); // Return an edit form view
+}
+
+public function destroy($id)
+{
+    $partner = Partner::findOrFail($id); // Fetch the partner using the ID
+    $partner->delete(); // Delete the partner
+   
+    
+    return redirect()->route('admin.partners.list')->with('success', 'Partner deleted successfully.');
+}
+public function update(Request $request, $id)
+{
+    $partner = Partner::findOrFail($id);
+
+    $partner->update($request->only(['first_name', 'last_name', 'email', 'phone_number', 'address']));
+  
+    return redirect()->route('admin.partners.list')->with('success', 'Partner updated successfully.');
+}
+
+
 }
